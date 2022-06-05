@@ -1,8 +1,9 @@
 package bm.app.screens
 
-import androidx.compose.foundation.layout.*
+import android.util.Log
+import androidx.compose.foundation.layout.* // ktlint-disable no-wildcard-imports
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.* // ktlint-disable no-wildcard-imports
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +19,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.navigation.NavController
 import bm.app.dataStore
+import io.ktor.client.* // ktlint-disable no-wildcard-imports
+import io.ktor.client.engine.cio.* // ktlint-disable no-wildcard-imports
+import io.ktor.client.request.* // ktlint-disable no-wildcard-imports
 import kotlinx.coroutines.flow.map
+
+val client = HttpClient(CIO)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +40,15 @@ fun Service(navController: NavController, categoryName: String) {
     val (phoneSt, setPhoneSt) = remember { mutableStateOf("") }
 
     LaunchedEffect(true) {
+
+        val response = client.get("https://ktor.io/")
+
+        println(response.status)
+
+        Log.d("Service", "response: ${response.status}")
+
+        client.close()
+
         val phonePref = stringPreferencesKey("phoneNumber")
 
         val phone = dataStore.data.map { preferences ->
