@@ -41,34 +41,36 @@ fun App() {
     Scaffold(bottomBar = {
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
-            // contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         ) {
-            navItems.forEachIndexed(action = { index, item ->
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            item.icon,
-                            contentDescription = null,
-                            tint = if (selectedSt == index) MaterialTheme.colorScheme.primaryContainer
-                            else MaterialTheme.colorScheme.onPrimaryContainer
-
+            navItems.forEachIndexed(
+                action = { index, item ->
+                    NavigationBarItem(
+                        icon = {
+                            Icon(
+                                item.icon,
+                                contentDescription = null,
+                                tint = when (index) {
+                                    selectedSt -> MaterialTheme.colorScheme.primaryContainer
+                                    else -> MaterialTheme.colorScheme.onPrimaryContainer
+                                }
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = item.label,
+                                style = MaterialTheme.typography.labelLarge,
+                            )
+                        },
+                        selected = selectedSt == index,
+                        onClick = { setSelectedSt(index) },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primaryContainer,
+                            selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            indicatorColor = MaterialTheme.colorScheme.primary,
                         )
-                    },
-                    label = {
-                        Text(
-                            text = item.label,
-                            style = MaterialTheme.typography.labelLarge,
-                        )
-                    },
-                    selected = selectedSt == index,
-                    onClick = { setSelectedSt(index) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primaryContainer,
-                        selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        indicatorColor = MaterialTheme.colorScheme.primary,
                     )
-                )
-            })
+                }
+            )
         }
     }) {
         NavHost(navController = navController, startDestination = "home") {
