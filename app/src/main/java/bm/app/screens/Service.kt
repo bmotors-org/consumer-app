@@ -2,10 +2,8 @@ package bm.app.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -20,12 +18,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
 import bm.app.components.OtpInputDialog
-import bm.app.data.serde.PhoneNumber
+import bm.app.components.PhoneVerifyButton
 import bm.app.dataStore
-import bm.app.ktor.ktorHttpClient
-import io.ktor.client.request.* // ktlint-disable no-wildcard-imports
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 @Composable
 fun Service(categoryName: String) {
@@ -77,25 +72,11 @@ fun Service(categoryName: String) {
         when (verifiedSt) {
             true -> {}
             false -> {
-                Button(
-                    onClick = {
-                        scope.launch {
-                            val response =
-                                ktorHttpClient.post {
-                                    url(urlString = "verify-phone-number")
-                                    setBody(PhoneNumber(phoneSt))
-                                }
-                            println(response.status)
-                        }
-                        setOtpDisplaySt(true)
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(16.dp)
-                ) {
-                    Text(
-                        text = "Verify",
-                    )
-                }
+                PhoneVerifyButton(
+                    phoneSt,
+                    setOtpDisplaySt,
+                    scope
+                )
             }
         }
     }
