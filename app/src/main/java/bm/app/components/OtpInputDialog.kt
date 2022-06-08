@@ -18,18 +18,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import bm.app.R
+import bm.app.data.serde.OtpVerification
+import bm.app.ktor.ktorHttpClient
+import io.ktor.client.request.* // ktlint-disable no-wildcard-imports
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun OtpInputDialog(
+    phoneSt: String,
     otpSt: String,
     setOtpSt: (String) -> Unit,
-    setOtpDisplaySt: (Boolean) -> Unit
+    setOtpDisplaySt: (Boolean) -> Unit,
+    scope: CoroutineScope,
 ) {
     AlertDialog(
         onDismissRequest = { setOtpDisplaySt(false) },
         confirmButton = {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    scope.launch {
+                        ktorHttpClient.post {
+                            url(urlString = "/otp")
+                            setBody(OtpVerification(otpSt, phoneSt))
+                        }
+                    }
+                },
                 contentPadding = PaddingValues(16.dp, 10.dp)
             ) {
                 Text(
