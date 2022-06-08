@@ -12,7 +12,7 @@ import io.ktor.serialization.kotlinx.json.* // ktlint-disable no-wildcard-import
 import io.ktor.util.* // ktlint-disable no-wildcard-imports
 import kotlinx.serialization.json.Json
 
-val client = HttpClient(CIO) {
+val ktorHttpClient = HttpClient(CIO) {
     defaultRequest {
         url {
             protocol = URLProtocol.HTTP
