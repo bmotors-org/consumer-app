@@ -17,12 +17,10 @@ val ktorHttpClient = HttpClient(CIO) {
         url {
             protocol = URLProtocol.HTTP
             host = "SERVER_BASE_URL"
-            path("/api")
+            port = 4000
+            path("api/")
         }
-        headers.appendIfNameAbsent(
-            HttpHeaders.ContentType,
-            ContentType.Application.Json.toString()
-        )
+        headers.appendIfNameAbsent(name = "Content-Type", value = "application/json")
     }
 
     install(Resources)
