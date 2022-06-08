@@ -5,42 +5,41 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.SecureFlagPolicy
 import androidx.datastore.preferences.core.stringPreferencesKey
-import bm.app.R
+import bm.app.components.OtpInputDialog
+import bm.app.data.serde.PhoneNumber
 import bm.app.dataStore
+import bm.app.ktor.ktorHttpClient
+import io.ktor.client.request.* // ktlint-disable no-wildcard-imports
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 @Composable
 fun Service(categoryName: String) {
     val dataStore = LocalContext.current.dataStore
     val (verifiedSt, setVerifiedSt) = rememberSaveable { mutableStateOf(false) }
-    val (verifyPhoneCardSt, setVerifyPhoneCardSt) = remember {
+    val (OtpDisplaySt, setOtpDisplaySt) = remember {
         mutableStateOf(
             false
         )
     }
     val (otpSt, setOtpSt) = remember { mutableStateOf("") }
     val (phoneSt, setPhoneSt) = remember { mutableStateOf("") }
+
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(true) {
         val phonePref = stringPreferencesKey("phoneNumber")
@@ -58,7 +57,9 @@ fun Service(categoryName: String) {
     }
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Text(
@@ -77,7 +78,17 @@ fun Service(categoryName: String) {
             true -> {}
             false -> {
                 Button(
-                    onClick = { setVerifyPhoneCardSt(true) },
+                    onClick = {
+                        scope.launch {
+                            val response =
+                                ktorHttpClient.post {
+                                    url(urlString = "verify-phone-number")
+                                    setBody(PhoneNumber(phoneSt))
+                                }
+                            println(response.status)
+                        }
+                        setOtpDisplaySt(true)
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(16.dp)
                 ) {
@@ -89,69 +100,12 @@ fun Service(categoryName: String) {
         }
     }
 
-    when (verifyPhoneCardSt) {
+    when (OtpDisplaySt) {
         true -> {
-            AlertDialog(
-                onDismissRequest = { setVerifyPhoneCardSt(false) },
-                confirmButton = {
-                    Button(
-                        onClick = { /*TODO*/ },
-                        contentPadding = PaddingValues(16.dp, 10.dp)
-                    ) {
-                        Text(
-                            text = "Verify",
-                        )
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            setVerifyPhoneCardSt(false)
-                            setOtpSt("")
-                        },
-                        contentPadding = PaddingValues(16.dp, 10.dp)
-                    ) {
-                        Text(
-                            text = "Cancel",
-                        )
-                    }
-                },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.logo),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.size(32.dp)
-                    )
-                },
-                title = {
-                    Text(
-                        text = "Enter the otp sent to your phone number",
-                    )
-                },
-                text = {
-                    OutlinedTextField(
-                        value = otpSt,
-                        onValueChange = { setOtpSt(it) },
-                        label = {
-                            Text(
-                                text = "OTP"
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                },
-                shape = RoundedCornerShape(8.dp),
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                tonalElevation = 8.dp,
-                iconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                textContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                properties = DialogProperties(
-                    dismissOnBackPress = true,
-                    dismissOnClickOutside = true,
-                    securePolicy = SecureFlagPolicy.SecureOn
-                )
+            OtpInputDialog(
+                otpSt = otpSt,
+                setOtpSt = setOtpSt,
+                setOtpDisplaySt = setOtpDisplaySt
             )
         }
 
