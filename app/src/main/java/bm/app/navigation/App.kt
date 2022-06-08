@@ -58,7 +58,7 @@ fun App() {
                         label = {
                             Text(
                                 text = item.label,
-                                style = MaterialTheme.typography.labelLarge,
+                                style = MaterialTheme.typography.labelMedium,
                             )
                         },
                         selected = selectedSt == index,
@@ -86,7 +86,6 @@ fun App() {
                 )
             ) {
                 Service(
-                    navController = navController,
                     categoryName = it.arguments?.getString("categoryName") ?: ""
                 )
             }
