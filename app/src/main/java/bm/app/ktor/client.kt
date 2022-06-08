@@ -6,6 +6,7 @@ import io.ktor.client.plugins.* // ktlint-disable no-wildcard-imports
 import io.ktor.client.plugins.cache.* // ktlint-disable no-wildcard-imports
 import io.ktor.client.plugins.contentnegotiation.* // ktlint-disable no-wildcard-imports
 import io.ktor.client.plugins.logging.* // ktlint-disable no-wildcard-imports
+import io.ktor.client.plugins.resources.* // ktlint-disable no-wildcard-imports
 import io.ktor.http.* // ktlint-disable no-wildcard-imports
 import io.ktor.serialization.kotlinx.json.* // ktlint-disable no-wildcard-imports
 import io.ktor.util.* // ktlint-disable no-wildcard-imports
@@ -23,6 +24,8 @@ val client = HttpClient(CIO) {
             ContentType.Application.Json.toString()
         )
     }
+
+    install(Resources)
 
     install(ContentNegotiation) {
         json(
