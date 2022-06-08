@@ -9,10 +9,10 @@ import bm.app.screens.Home
 import bm.app.screens.Service
 
 @Composable
-fun NavLogic(navController: NavHostController, startDestination: String) {
-    NavHost(navController, startDestination) {
+fun NavLogic(navHostController: NavHostController) {
+    NavHost(navHostController, startDestination = "home") {
         composable(route = "home") {
-            Home(navController = navController)
+            Home(navController = navHostController)
         }
         composable(
             route = "services?categoryName={categoryName}",
