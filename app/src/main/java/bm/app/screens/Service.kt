@@ -1,9 +1,18 @@
 package bm.app.screens
 
-import android.util.Log
-import androidx.compose.foundation.layout.* // ktlint-disable no-wildcard-imports
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.* // ktlint-disable no-wildcard-imports
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -17,18 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.navigation.NavController
 import bm.app.dataStore
-import io.ktor.client.* // ktlint-disable no-wildcard-imports
-import io.ktor.client.engine.cio.* // ktlint-disable no-wildcard-imports
-import io.ktor.client.request.* // ktlint-disable no-wildcard-imports
 import kotlinx.coroutines.flow.map
-
-val client = HttpClient(CIO)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Service(navController: NavController, categoryName: String) {
+fun Service(categoryName: String) {
     val dataStore = LocalContext.current.dataStore
     val (verifiedSt, setVerifiedSt) = rememberSaveable { mutableStateOf(false) }
     val (verifyPhoneCardSt, setVerifyPhoneCardSt) = remember {
@@ -40,15 +43,6 @@ fun Service(navController: NavController, categoryName: String) {
     val (phoneSt, setPhoneSt) = remember { mutableStateOf("") }
 
     LaunchedEffect(true) {
-
-        val response = client.get("https://ktor.io/")
-
-        println(response.status)
-
-        Log.d("Service", "response: ${response.status}")
-
-        client.close()
-
         val phonePref = stringPreferencesKey("phoneNumber")
 
         val phone = dataStore.data.map { preferences ->
@@ -68,8 +62,8 @@ fun Service(navController: NavController, categoryName: String) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Text(
-            text = "$categoryName Vehicle",
-            fontSize = 30.sp,
+            text = categoryName,
+            style = MaterialTheme.typography.headlineLarge,
         )
         OutlinedTextField(
             value = phoneSt, onValueChange = { setPhoneSt(it) }, label = {
@@ -89,7 +83,6 @@ fun Service(navController: NavController, categoryName: String) {
                 ) {
                     Text(
                         text = "Verify",
-                        fontSize = 16.sp
                     )
                 }
             }
