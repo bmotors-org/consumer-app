@@ -1,8 +1,6 @@
 package bm.app.navigation
 
 import android.annotation.SuppressLint
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.* // ktlint-disable no-wildcard-imports
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,12 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import bm.app.screens.Home
-import bm.app.screens.Service
+import bm.app.data.navItems
 
 data class NavItem(val icon: ImageVector, val label: String)
 
@@ -29,12 +23,6 @@ data class NavItem(val icon: ImageVector, val label: String)
 @Composable
 fun App() {
     val (selectedSt, setSelectedSt) = remember { mutableStateOf(0) }
-
-    val navItems = listOf(
-        NavItem(Icons.Filled.Home, "Home"),
-        NavItem(Icons.Filled.Email, "Mail"),
-        NavItem(Icons.Filled.Person, "Profile")
-    )
 
     val navController = rememberNavController()
 
@@ -73,22 +61,6 @@ fun App() {
             )
         }
     }) {
-        NavHost(navController = navController, startDestination = "home") {
-            composable(route = "home") {
-                Home(navController = navController)
-            }
-            composable(
-                route = "services?categoryName={categoryName}",
-                arguments = listOf(
-                    navArgument("categoryName") {
-                        defaultValue = ""
-                    }
-                )
-            ) {
-                Service(
-                    categoryName = it.arguments?.getString("categoryName") ?: ""
-                )
-            }
-        }
+        NavLogic(navController = navController, startDestination = "home")
     }
 }
