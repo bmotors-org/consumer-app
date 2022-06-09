@@ -5,4 +5,4 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Resource(path = "/verify-phone-number")
-data class OtpVerification(val otpCode: String, val phoneNumber: String)
+data class OtpVerification(val phoneNumber: String, val otpCode: String)
