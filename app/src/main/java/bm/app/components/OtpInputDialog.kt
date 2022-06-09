@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import bm.app.R
+import bm.app.data.constants.ApiEndPoints
 import bm.app.data.serde.OtpVerification
 import bm.app.ktor.ktorHttpClient
 import io.ktor.client.request.* // ktlint-disable no-wildcard-imports
@@ -39,7 +40,7 @@ fun OtpInputDialog(
                 onClick = {
                     scope.launch {
                         ktorHttpClient.post {
-                            url(urlString = "/otp")
+                            url(urlString = ApiEndPoints.VERIFY_OTP)
                             setBody(OtpVerification(otpSt, phoneSt))
                         }
                     }
