@@ -16,9 +16,7 @@ import bm.app.data.navItems
 fun BottomBar(navHostController: NavHostController) {
     val (selectedSt, setSelectedSt) = remember { mutableStateOf(0) }
 
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-    ) {
+    NavigationBar {
         navItems.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {
