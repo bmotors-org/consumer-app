@@ -5,4 +5,4 @@ import kotlinx.serialization.* // ktlint-disable no-wildcard-imports
 
 @Serializable
 @Resource(path = "/verify-phone-number")
-data class PhoneNumber(val number: String)
+data class PhoneVerification(val phoneNumber: String)
