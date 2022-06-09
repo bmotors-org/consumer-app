@@ -7,10 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import bm.app.data.constants.ApiEndPoints
-import bm.app.data.serde.PhoneVerification
-import bm.app.ktor.ktorHttpClient
-import io.ktor.client.request.* // ktlint-disable no-wildcard-imports
+import bm.app.ktor.ApiMethods
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -23,11 +20,7 @@ fun PhoneVerifyButton(
     Button(
         onClick = {
             scope.launch {
-                val response =
-                    ktorHttpClient.post {
-                        url(urlString = ApiEndPoints.VERIFY_PHONE)
-                        setBody(PhoneVerification(phoneSt))
-                    }
+                val response = ApiMethods.verifyPhoneNumber(phoneSt)
                 println(response.status)
             }
             setOtpDisplaySt(true)
