@@ -84,9 +84,11 @@ fun Service(categoryName: String) {
     when (OtpDisplaySt) {
         true -> {
             OtpInputDialog(
+                phoneSt = phoneSt,
                 otpSt = otpSt,
                 setOtpSt = setOtpSt,
-                setOtpDisplaySt = setOtpDisplaySt
+                setOtpDisplaySt = setOtpDisplaySt,
+                scope = scope,
             )
         }
 
