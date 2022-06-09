@@ -20,10 +20,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import bm.app.components.OtpInputDialog
 import bm.app.components.PhoneVerifyButton
 import bm.app.dataStore
+import io.ktor.client.* // ktlint-disable no-wildcard-imports
 import kotlinx.coroutines.flow.map
 
 @Composable
-fun Service(categoryName: String) {
+fun Service(categoryName: String, HttpClient: HttpClient) {
     val dataStore = LocalContext.current.dataStore
     val (verifiedSt, setVerifiedSt) = rememberSaveable { mutableStateOf(false) }
     val (OtpDisplaySt, setOtpDisplaySt) = remember {
