@@ -8,24 +8,16 @@ import io.ktor.client.statement.* // ktlint-disable no-wildcard-imports
 
 object ApiMethods {
     suspend fun verifyPhoneNumber(phoneNumber: String): HttpResponse {
-        KtorHttpClient.use { client ->
-            return run {
-                client.post {
-                    url(urlString = ApiEndPoints.VERIFY_PHONE)
-                    setBody(PhoneVerification(phoneNumber))
-                }
-            }
+        return KtorHttpClient.post {
+            url(urlString = ApiEndPoints.VERIFY_PHONE)
+            setBody(PhoneVerification(phoneNumber))
         }
     }
 
-    suspend fun verifyOtp(phoneNumber: String, otp: String): HttpResponse {
-        KtorHttpClient.use { client ->
-            return run {
-                client.post {
-                    url(urlString = ApiEndPoints.VERIFY_OTP)
-                    setBody(OtpVerification(phoneNumber, otp))
-                }
-            }
+    suspend fun verifyOtp(phoneNumber: String, otpCode: String): HttpResponse {
+        return KtorHttpClient.post {
+            url(urlString = ApiEndPoints.VERIFY_OTP)
+            setBody(OtpVerification(phoneNumber, otpCode))
         }
     }
 }
