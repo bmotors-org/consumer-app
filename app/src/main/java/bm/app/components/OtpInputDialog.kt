@@ -64,7 +64,7 @@ fun OtpInputDialog(
             Icon(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.size(32.dp)
             )
         },
@@ -86,11 +86,11 @@ fun OtpInputDialog(
             )
         },
         shape = RoundedCornerShape(8.dp),
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        containerColor = MaterialTheme.colorScheme.surface,
         tonalElevation = 8.dp,
-        iconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-        textContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        iconContentColor = MaterialTheme.colorScheme.onSurface,
+        titleContentColor = MaterialTheme.colorScheme.onSurface,
+        textContentColor = MaterialTheme.colorScheme.onSurface,
         properties = DialogProperties(
             dismissOnBackPress = true,
             dismissOnClickOutside = true,
