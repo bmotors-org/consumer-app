@@ -1,4 +1,4 @@
-package bm.app.screens
+package bm.app.screens.service
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -35,8 +34,6 @@ fun Service(categoryName: String, HttpClient: HttpClient) {
     val (otpSt, setOtpSt) = remember { mutableStateOf("") }
     val (phoneSt, setPhoneSt) = remember { mutableStateOf("") }
 
-    val scope = rememberCoroutineScope()
-
     LaunchedEffect(true) {
         val phonePref = stringPreferencesKey("phoneNumber")
 
@@ -47,8 +44,8 @@ fun Service(categoryName: String, HttpClient: HttpClient) {
             phone.collect {
                 setPhoneSt(it)
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (cause: Exception) {
+            println(cause.message)
         }
     }
 
@@ -78,8 +75,7 @@ fun Service(categoryName: String, HttpClient: HttpClient) {
             false -> {
                 PhoneVerifyButton(
                     phoneSt,
-                    setOtpDisplaySt,
-                    scope
+                    setOtpDisplaySt
                 )
             }
         }
@@ -92,8 +88,7 @@ fun Service(categoryName: String, HttpClient: HttpClient) {
                 otpSt = otpSt,
                 setOtpSt = setOtpSt,
                 setOtpDisplaySt = setOtpDisplaySt,
-                setVerifiedSt = setVerifiedSt,
-                scope = scope
+                setVerifiedSt = setVerifiedSt
             )
         }
 

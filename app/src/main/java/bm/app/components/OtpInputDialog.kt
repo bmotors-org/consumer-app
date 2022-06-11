@@ -12,6 +12,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -21,7 +22,6 @@ import bm.app.R
 import bm.app.ktor.ApiMethods
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -30,9 +30,10 @@ fun OtpInputDialog(
     otpSt: String,
     setOtpSt: (String) -> Unit,
     setOtpDisplaySt: (Boolean) -> Unit,
-    setVerifiedSt: (Boolean) -> Unit,
-    scope: CoroutineScope
+    setVerifiedSt: (Boolean) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+
     AlertDialog(
         onDismissRequest = { setOtpDisplaySt(false) },
         confirmButton = {
