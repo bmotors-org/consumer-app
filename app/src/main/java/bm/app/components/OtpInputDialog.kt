@@ -19,6 +19,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import bm.app.R
 import bm.app.ktor.ApiMethods
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -28,7 +30,8 @@ fun OtpInputDialog(
     otpSt: String,
     setOtpSt: (String) -> Unit,
     setOtpDisplaySt: (Boolean) -> Unit,
-    scope: CoroutineScope,
+    setVerifiedSt: (Boolean) -> Unit,
+    scope: CoroutineScope
 ) {
     AlertDialog(
         onDismissRequest = { setOtpDisplaySt(false) },
@@ -36,14 +39,17 @@ fun OtpInputDialog(
             Button(
                 onClick = {
                     scope.launch {
-                        val response = ApiMethods.verifyOtp(phoneSt, otpSt)
-                        println(response.status)
+                        val response: HttpResponse = ApiMethods.verifyOtp(phoneSt, otpSt)
+                        if (response.status == HttpStatusCode.OK) {
+                            setVerifiedSt(true)
+                            setOtpDisplaySt(false)
+                        }
                     }
                 },
                 contentPadding = PaddingValues(16.dp, 10.dp)
             ) {
                 Text(
-                    text = "Verify",
+                    text = "Verify"
                 )
             }
         },
@@ -56,7 +62,7 @@ fun OtpInputDialog(
                 contentPadding = PaddingValues(16.dp, 10.dp)
             ) {
                 Text(
-                    text = "Cancel",
+                    text = "Cancel"
                 )
             }
         },
@@ -70,7 +76,7 @@ fun OtpInputDialog(
         },
         title = {
             Text(
-                text = "Enter the otp sent to your phone number",
+                text = "Enter the otp sent to your phone number"
             )
         },
         text = {
