@@ -1,4 +1,4 @@
-package bm.app.data
+package bm.app.data.utils
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
