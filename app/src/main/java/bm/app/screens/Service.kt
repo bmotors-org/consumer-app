@@ -20,7 +20,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import bm.app.components.OtpInputDialog
 import bm.app.components.PhoneVerifyButton
 import bm.app.dataStore
-import io.ktor.client.* // ktlint-disable no-wildcard-imports
+import io.ktor.client.*
 import kotlinx.coroutines.flow.map
 
 @Composable
@@ -56,18 +56,21 @@ fun Service(categoryName: String, HttpClient: HttpClient) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
             text = categoryName,
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineLarge
         )
         OutlinedTextField(
-            value = phoneSt, onValueChange = { setPhoneSt(it) }, label = {
+            value = phoneSt,
+            onValueChange = { setPhoneSt(it) },
+            label = {
                 Text(
                     text = "Phone Number"
                 )
-            }, modifier = Modifier.fillMaxWidth()
+            },
+            modifier = Modifier.fillMaxWidth()
         )
 
         when (verifiedSt) {
@@ -89,7 +92,8 @@ fun Service(categoryName: String, HttpClient: HttpClient) {
                 otpSt = otpSt,
                 setOtpSt = setOtpSt,
                 setOtpDisplaySt = setOtpDisplaySt,
-                scope = scope,
+                setVerifiedSt = setVerifiedSt,
+                scope = scope
             )
         }
 
