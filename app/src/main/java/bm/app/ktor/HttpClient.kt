@@ -1,18 +1,22 @@
 package bm.app.ktor
 
-import io.ktor.client.* // ktlint-disable no-wildcard-imports
-import io.ktor.client.engine.cio.* // ktlint-disable no-wildcard-imports
-import io.ktor.client.plugins.* // ktlint-disable no-wildcard-imports
-import io.ktor.client.plugins.cache.* // ktlint-disable no-wildcard-imports
-import io.ktor.client.plugins.contentnegotiation.* // ktlint-disable no-wildcard-imports
-import io.ktor.client.plugins.logging.* // ktlint-disable no-wildcard-imports
-import io.ktor.client.plugins.resources.* // ktlint-disable no-wildcard-imports
-import io.ktor.http.* // ktlint-disable no-wildcard-imports
-import io.ktor.serialization.kotlinx.json.* // ktlint-disable no-wildcard-imports
-import io.ktor.util.* // ktlint-disable no-wildcard-imports
+import bm.app.ktor.utils.MissingPageException
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.cache.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.resources.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.util.*
 import kotlinx.serialization.json.Json
 
 val KtorHttpClient = HttpClient(CIO) {
+    expectSuccess = true
+
     defaultRequest {
         url {
             protocol = URLProtocol.HTTP
@@ -20,7 +24,10 @@ val KtorHttpClient = HttpClient(CIO) {
             port = 4000
             path("api/")
         }
-        headers.appendIfNameAbsent(name = "Content-Type", value = "application/json")
+        headers.appendIfNameAbsent(
+            name = "Content-Type",
+            value = "application/json"
+        )
     }
 
     install(Resources)
@@ -29,8 +36,23 @@ val KtorHttpClient = HttpClient(CIO) {
         json(
             Json {
                 prettyPrint = true
+                ignoreUnknownKeys = true
             }
         )
+    }
+
+    HttpResponseValidator {
+        handleResponseExceptionWithRequest { exception, _ ->
+            if (exception !is ClientRequestException) return@handleResponseExceptionWithRequest
+            val exceptionResponse = exception.response
+            if (exceptionResponse.status == HttpStatusCode.NotFound) {
+                val exceptionResponseText = exceptionResponse.bodyAsText()
+                throw MissingPageException(
+                    exceptionResponse,
+                    exceptionResponseText
+                )
+            }
+        }
     }
 
     install(UserAgent) {
@@ -39,6 +61,7 @@ val KtorHttpClient = HttpClient(CIO) {
 
     install(HttpRequestRetry) {
         retryOnServerErrors(maxRetries = 3)
+        retryOnException(maxRetries = 3)
         exponentialDelay()
     }
 
