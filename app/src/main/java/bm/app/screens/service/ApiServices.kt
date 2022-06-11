@@ -1,8 +1,10 @@
-package bm.app.ktor
+package bm.app.screens.service
 
 import bm.app.data.constants.ApiEndPoints
 import bm.app.data.serde.OtpVerification
 import bm.app.data.serde.PhoneVerification
+import bm.app.ktor.ApiInterface
+import bm.app.ktor.KtorHttpClient
 import bm.app.ktor.utils.CustomHttpResponse
 import bm.app.ktor.utils.KtorResponseException
 import bm.app.ktor.utils.MissingPageException
@@ -10,8 +12,8 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import java.net.ConnectException
 
-object ApiMethods {
-    suspend fun verifyPhoneNumber(phoneNumber: String): HttpResponse {
+class ApiServices : ApiInterface {
+    override suspend fun verifyPhone(phoneNumber: String): HttpResponse {
         return try {
             KtorHttpClient.post {
                 url(urlString = ApiEndPoints.VERIFY_PHONE)
@@ -29,7 +31,7 @@ object ApiMethods {
         }
     }
 
-    suspend fun verifyOtp(phoneNumber: String, otpCode: String): HttpResponse {
+    override suspend fun verifyOtp(phoneNumber: String, otpCode: String): HttpResponse {
         return try {
             KtorHttpClient.post {
                 url(urlString = ApiEndPoints.VERIFY_OTP)
