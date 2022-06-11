@@ -6,8 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import bm.app.screens.Home
-import bm.app.screens.Service
-import io.ktor.client.* // ktlint-disable no-wildcard-imports
+import bm.app.screens.service.Service
+import io.ktor.client.*
 
 @Composable
 fun NavLogic(navHostController: NavHostController, HttpClient: HttpClient) {
