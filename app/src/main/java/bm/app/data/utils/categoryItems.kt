@@ -1,4 +1,4 @@
-package bm.app.data
+package bm.app.data.utils
 
 import bm.app.R
 
@@ -12,5 +12,5 @@ val categoryList = listOf(
     Category(Logo(truckLogoID, "Truck"), "Open Truck"),
     Category(Logo(truckLogoID, "Truck"), "Covered Truck"),
     Category(Logo(truckLogoID, "Truck"), "Cement Truck"),
-    Category(Logo(truckLogoID, "Truck"), "Trailer Van"),
+    Category(Logo(truckLogoID, "Truck"), "Trailer Van")
 )
