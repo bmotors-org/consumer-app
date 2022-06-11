@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.rememberNavController
 import bm.app.components.BottomBar
-import bm.app.ktor.KtorHttpClient
 
 data class NavItem(val icon: ImageVector, val label: String)
 
@@ -22,6 +21,6 @@ fun App() {
             BottomBar(navHostController = navHostController)
         }
     ) {
-        NavLogic(navHostController = navHostController, HttpClient = KtorHttpClient)
+        NavLogic(navHostController = navHostController)
     }
 }
