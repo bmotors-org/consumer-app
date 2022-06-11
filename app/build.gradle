@@ -63,6 +63,7 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
     // Ktor client
     implementation "io.ktor:ktor-client-core:$ktor_version"
     // Ktor engine
