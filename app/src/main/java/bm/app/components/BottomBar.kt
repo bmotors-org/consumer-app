@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
-import bm.app.data.navItems
+import bm.app.data.utils.navItems
 
 @Composable
 fun BottomBar(navHostController: NavHostController) {
@@ -32,7 +32,7 @@ fun BottomBar(navHostController: NavHostController) {
                 label = {
                     Text(
                         text = item.label,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.labelMedium
                     )
                 },
                 selected = selectedSt == index,
@@ -40,7 +40,7 @@ fun BottomBar(navHostController: NavHostController) {
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primaryContainer,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    indicatorColor = MaterialTheme.colorScheme.primary,
+                    indicatorColor = MaterialTheme.colorScheme.primary
                 )
             )
         }
