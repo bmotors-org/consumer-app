@@ -7,10 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import bm.app.screens.Home
 import bm.app.screens.service.Service
-import io.ktor.client.*
 
 @Composable
-fun NavLogic(navHostController: NavHostController, HttpClient: HttpClient) {
+fun NavLogic(navHostController: NavHostController) {
     NavHost(navHostController, startDestination = "home") {
         composable(route = "home") {
             Home(navController = navHostController)
@@ -24,8 +23,7 @@ fun NavLogic(navHostController: NavHostController, HttpClient: HttpClient) {
             )
         ) {
             Service(
-                categoryName = it.arguments?.getString("categoryName") ?: "",
-                HttpClient = HttpClient
+                categoryName = it.arguments?.getString("categoryName") ?: ""
             )
         }
     }
