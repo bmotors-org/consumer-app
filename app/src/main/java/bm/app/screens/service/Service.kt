@@ -16,14 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.viewmodel.compose.viewModel
 import bm.app.components.OtpInputDialog
 import bm.app.components.PhoneVerifyButton
 import bm.app.dataStore
-import io.ktor.client.*
 import kotlinx.coroutines.flow.map
 
 @Composable
-fun Service(categoryName: String, HttpClient: HttpClient) {
+fun Service(
+    categoryName: String,
+    serviceViewModel: ServiceViewModel = viewModel()
+) {
     val dataStore = LocalContext.current.dataStore
     val (verifiedSt, setVerifiedSt) = rememberSaveable { mutableStateOf(false) }
     val (OtpDisplaySt, setOtpDisplaySt) = remember {
@@ -75,7 +78,10 @@ fun Service(categoryName: String, HttpClient: HttpClient) {
             false -> {
                 PhoneVerifyButton(
                     phoneSt,
-                    setOtpDisplaySt
+                    setOtpDisplaySt,
+                    beginPhoneVerification = { phoneNumber: String ->
+                        serviceViewModel.beignPhoneVerification(phoneNumber)
+                    }
                 )
             }
         }
@@ -88,7 +94,10 @@ fun Service(categoryName: String, HttpClient: HttpClient) {
                 otpSt = otpSt,
                 setOtpSt = setOtpSt,
                 setOtpDisplaySt = setOtpDisplaySt,
-                setVerifiedSt = setVerifiedSt
+                setVerifiedSt = setVerifiedSt,
+                beginOtpVerification = { phoneNumber: String, otpCode: String ->
+                    serviceViewModel.beginOtpVerification(phoneNumber, otpCode)
+                }
             )
         }
 
