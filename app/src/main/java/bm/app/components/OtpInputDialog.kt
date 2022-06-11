@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import bm.app.R
-import bm.app.ktor.ApiMethods
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.launch
@@ -30,7 +29,8 @@ fun OtpInputDialog(
     otpSt: String,
     setOtpSt: (String) -> Unit,
     setOtpDisplaySt: (Boolean) -> Unit,
-    setVerifiedSt: (Boolean) -> Unit
+    setVerifiedSt: (Boolean) -> Unit,
+    beginOtpVerification: suspend (String, String) -> HttpResponse
 ) {
     val scope = rememberCoroutineScope()
 
@@ -40,7 +40,8 @@ fun OtpInputDialog(
             Button(
                 onClick = {
                     scope.launch {
-                        val response: HttpResponse = ApiMethods.verifyOtp(phoneSt, otpSt)
+                        val response = beginOtpVerification(phoneSt, otpSt)
+
                         if (response.status == HttpStatusCode.OK) {
                             setVerifiedSt(true)
                             setOtpDisplaySt(false)

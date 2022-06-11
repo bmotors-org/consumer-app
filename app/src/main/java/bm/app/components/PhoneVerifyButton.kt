@@ -8,21 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import bm.app.ktor.ApiMethods
+import io.ktor.client.statement.*
 import kotlinx.coroutines.launch
 
 @Composable
 fun PhoneVerifyButton(
     phoneSt: String,
-    setOtpDisplaySt: (Boolean) -> Unit
+    setOtpDisplaySt: (Boolean) -> Unit,
+    beginPhoneVerification: suspend (String) -> HttpResponse
 ) {
     val scope = rememberCoroutineScope()
 
     Button(
         onClick = {
             scope.launch {
-                val response = ApiMethods.verifyPhoneNumber(phoneSt)
-                println(response.status)
+                println(beginPhoneVerification(phoneSt))
             }
             setOtpDisplaySt(true)
         },
