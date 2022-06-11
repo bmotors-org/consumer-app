@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import bm.app.data.categoryList
+import bm.app.data.utils.categoryList
 
 fun handleClick(navController: NavController, categoryIndex: Int) {
     navController.navigate(
@@ -46,7 +46,8 @@ fun Categories(navController: NavController) {
                 ),
                 onClick = {
                     handleClick(
-                        navController = navController, categoryIndex = idx
+                        navController = navController,
+                        categoryIndex = idx
                     )
                 }
             ) {
