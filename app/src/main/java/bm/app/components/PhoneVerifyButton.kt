@@ -29,7 +29,7 @@ fun PhoneVerifyButton(
         contentPadding = PaddingValues(16.dp)
     ) {
         Text(
-            text = "Verify",
+            text = "Verify"
         )
     }
 }
