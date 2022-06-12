@@ -9,6 +9,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.ktor.client.statement.*
+import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -23,7 +24,15 @@ fun PhoneVerifyButton(
     Button(
         onClick = {
             coroutineScope.launch(Dispatchers.Default) {
-                println(beginPhoneVerification(phoneNumber))
+                val response = beginPhoneVerification(phoneNumber)
+                when (response.status == HttpStatusCode.InternalServerError) {
+                    true -> {
+                        TODO("Not yet implemented")
+                    }
+                    false -> {
+                        TODO("Not yet implemented")
+                    }
+                }
             }
             setOtpInputDialogVisibility(true)
         },
