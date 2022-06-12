@@ -21,6 +21,7 @@ import androidx.compose.ui.window.SecureFlagPolicy
 import bm.app.R
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -32,14 +33,14 @@ fun OtpInputDialog(
     setVerified: (Boolean) -> Unit,
     beginOtpVerification: suspend (String, String) -> HttpResponse
 ) {
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     AlertDialog(
         onDismissRequest = { setOtpInputDialogVisibility(false) },
         confirmButton = {
             Button(
                 onClick = {
-                    scope.launch {
+                    coroutineScope.launch(Dispatchers.Default) {
                         val response = beginOtpVerification(phoneNumber, otpCode)
 
                         if (response.status == HttpStatusCode.OK) {

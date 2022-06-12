@@ -9,6 +9,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.ktor.client.statement.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -17,11 +18,11 @@ fun PhoneVerifyButton(
     setOtpInputDialogVisibility: (Boolean) -> Unit,
     beginPhoneVerification: suspend (String) -> HttpResponse
 ) {
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     Button(
         onClick = {
-            scope.launch {
+            coroutineScope.launch(Dispatchers.Default) {
                 println(beginPhoneVerification(phoneNumber))
             }
             setOtpInputDialogVisibility(true)
