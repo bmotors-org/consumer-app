@@ -25,6 +25,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.viewmodel.compose.viewModel
 import bm.app.components.OtpInputDialog
 import bm.app.components.PhoneVerifyButton
+import bm.app.components.VerifyConfirmChip
 import bm.app.dataStore
 import kotlinx.coroutines.flow.map
 
@@ -94,7 +95,9 @@ fun Service(
         )
 
         when (verified) {
-            true -> {}
+            true -> {
+                VerifyConfirmChip()
+            }
             false -> {
                 PhoneVerifyButton(
                     phoneNumber,
