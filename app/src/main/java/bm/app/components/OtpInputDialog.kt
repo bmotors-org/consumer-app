@@ -25,26 +25,26 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun OtpInputDialog(
-    phoneSt: String,
-    otpSt: String,
-    setOtpSt: (String) -> Unit,
-    setOtpDisplaySt: (Boolean) -> Unit,
-    setVerifiedSt: (Boolean) -> Unit,
+    phoneNumber: String,
+    otpCode: String,
+    setOtpCode: (String) -> Unit,
+    setOtpInputDialogVisibility: (Boolean) -> Unit,
+    setVerified: (Boolean) -> Unit,
     beginOtpVerification: suspend (String, String) -> HttpResponse
 ) {
     val scope = rememberCoroutineScope()
 
     AlertDialog(
-        onDismissRequest = { setOtpDisplaySt(false) },
+        onDismissRequest = { setOtpInputDialogVisibility(false) },
         confirmButton = {
             Button(
                 onClick = {
                     scope.launch {
-                        val response = beginOtpVerification(phoneSt, otpSt)
+                        val response = beginOtpVerification(phoneNumber, otpCode)
 
                         if (response.status == HttpStatusCode.OK) {
-                            setVerifiedSt(true)
-                            setOtpDisplaySt(false)
+                            setVerified(true)
+                            setOtpInputDialogVisibility(false)
                         }
                     }
                 },
@@ -58,8 +58,8 @@ fun OtpInputDialog(
         dismissButton = {
             TextButton(
                 onClick = {
-                    setOtpDisplaySt(false)
-                    setOtpSt("")
+                    setOtpInputDialogVisibility(false)
+                    setOtpCode("")
                 },
                 contentPadding = PaddingValues(16.dp, 10.dp)
             ) {
@@ -83,8 +83,8 @@ fun OtpInputDialog(
         },
         text = {
             OutlinedTextField(
-                value = otpSt,
-                onValueChange = { setOtpSt(it) },
+                value = otpCode,
+                onValueChange = { setOtpCode(it) },
                 label = {
                     Text(
                         text = "OTP"

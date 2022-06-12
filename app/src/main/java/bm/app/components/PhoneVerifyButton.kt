@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun PhoneVerifyButton(
-    phoneSt: String,
-    setOtpDisplaySt: (Boolean) -> Unit,
+    phoneNumber: String,
+    setOtpInputDialogVisibility: (Boolean) -> Unit,
     beginPhoneVerification: suspend (String) -> HttpResponse
 ) {
     val scope = rememberCoroutineScope()
@@ -22,9 +22,9 @@ fun PhoneVerifyButton(
     Button(
         onClick = {
             scope.launch {
-                println(beginPhoneVerification(phoneSt))
+                println(beginPhoneVerification(phoneNumber))
             }
-            setOtpDisplaySt(true)
+            setOtpInputDialogVisibility(true)
         },
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(16.dp)

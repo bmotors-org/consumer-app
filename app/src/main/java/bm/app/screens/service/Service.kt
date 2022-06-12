@@ -28,14 +28,13 @@ fun Service(
     serviceViewModel: ServiceViewModel = viewModel()
 ) {
     val dataStore = LocalContext.current.dataStore
-    val (verifiedSt, setVerifiedSt) = rememberSaveable { mutableStateOf(false) }
-    val (OtpDisplaySt, setOtpDisplaySt) = remember {
-        mutableStateOf(
-            false
-        )
+
+    val (verified, setVerified) = rememberSaveable { mutableStateOf(false) }
+    val (otpInputDialogVisibility, setOtpInputDialogVisibility) = remember {
+        mutableStateOf(false)
     }
-    val (otpSt, setOtpSt) = remember { mutableStateOf("") }
-    val (phoneSt, setPhoneSt) = remember { mutableStateOf("") }
+    val (otpCode, setOtpCode) = remember { mutableStateOf("") }
+    val (phoneNumber, setPhoneNumber) = remember { mutableStateOf("") }
 
     LaunchedEffect(true) {
         val phonePref = stringPreferencesKey("phoneNumber")
@@ -45,7 +44,7 @@ fun Service(
         }
         try {
             phone.collect {
-                setPhoneSt(it)
+                setPhoneNumber(it)
             }
         } catch (cause: Exception) {
             println(cause.message)
@@ -53,9 +52,7 @@ fun Service(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
@@ -63,8 +60,8 @@ fun Service(
             style = MaterialTheme.typography.headlineLarge
         )
         OutlinedTextField(
-            value = phoneSt,
-            onValueChange = { setPhoneSt(it) },
+            value = phoneNumber,
+            onValueChange = { setPhoneNumber(it) },
             label = {
                 Text(
                     text = "Phone Number"
@@ -73,12 +70,12 @@ fun Service(
             modifier = Modifier.fillMaxWidth()
         )
 
-        when (verifiedSt) {
+        when (verified) {
             true -> {}
             false -> {
                 PhoneVerifyButton(
-                    phoneSt,
-                    setOtpDisplaySt,
+                    phoneNumber,
+                    setOtpInputDialogVisibility,
                     beginPhoneVerification = { phoneNumber: String ->
                         serviceViewModel.beignPhoneVerification(phoneNumber)
                     }
@@ -87,14 +84,15 @@ fun Service(
         }
     }
 
-    when (OtpDisplaySt) {
+    when (otpInputDialogVisibility) {
         true -> {
+            @Suppress("NAME_SHADOWING")
             OtpInputDialog(
-                phoneSt = phoneSt,
-                otpSt = otpSt,
-                setOtpSt = setOtpSt,
-                setOtpDisplaySt = setOtpDisplaySt,
-                setVerifiedSt = setVerifiedSt,
+                phoneNumber = phoneNumber,
+                otpCode = otpCode,
+                setOtpCode = setOtpCode,
+                setOtpInputDialogVisibility = setOtpInputDialogVisibility,
+                setVerified = setVerified,
                 beginOtpVerification = { phoneNumber: String, otpCode: String ->
                     serviceViewModel.beginOtpVerification(phoneNumber, otpCode)
                 }
