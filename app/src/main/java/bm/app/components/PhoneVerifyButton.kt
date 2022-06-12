@@ -27,10 +27,10 @@ fun PhoneVerifyButton(
                 val response = beginPhoneVerification(phoneNumber)
                 when (response.status == HttpStatusCode.InternalServerError) {
                     true -> {
-                        TODO("Not yet implemented")
+                        // TODO: Implement later
                     }
                     false -> {
-                        TODO("Not yet implemented")
+                        // TODO: Implement later
                     }
                 }
             }
