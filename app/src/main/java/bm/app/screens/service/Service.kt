@@ -21,20 +21,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.viewmodel.compose.viewModel
 import bm.app.components.OtpInputDialog
 import bm.app.components.PhoneVerifyButton
 import bm.app.components.VerifyConfirmChip
+import bm.app.data.preferencesDS.DataStoreKeys
 import bm.app.dataStore
 import kotlinx.coroutines.flow.map
 
 @Composable
 fun Service(
-    categoryName: String,
-    serviceViewModel: ServiceViewModel = viewModel()
+    categoryName: String
 ) {
-    val dataStore = LocalContext.current.dataStore
+    val viewModel: ServiceViewModel = viewModel()
+    val context = LocalContext.current
 
     val (verified, setVerified) = rememberSaveable { mutableStateOf(false) }
     val (otpInputDialogVisibility, setOtpInputDialogVisibility) = remember {
@@ -44,14 +44,15 @@ fun Service(
     val (phoneNumber, setPhoneNumber) = remember { mutableStateOf("") }
 
     LaunchedEffect(true) {
-        val phonePref = stringPreferencesKey("phoneNumber")
-
-        val phone = dataStore.data.map { preferences ->
-            preferences[phonePref] ?: ""
+        val phoneNumberFlow = context.dataStore.data.map { preferences ->
+            preferences[DataStoreKeys.PHONE_NUMBER] ?: ""
         }
+
         try {
-            phone.collect {
+            phoneNumberFlow.collect {
+                println("I am here!! $it")
                 setPhoneNumber(it)
+                setVerified(it.isNotEmpty())
             }
         } catch (cause: Exception) {
             println(cause.message)
@@ -70,7 +71,11 @@ fun Service(
         )
         OutlinedTextField(
             value = phoneNumber,
-            onValueChange = { setPhoneNumber(it) },
+            onValueChange = {
+                if (it.length <= 10) {
+                    setPhoneNumber(it)
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             readOnly = verified,
             textStyle = TextStyle(
@@ -103,7 +108,7 @@ fun Service(
                     phoneNumber,
                     setOtpInputDialogVisibility,
                     beginPhoneVerification = { phoneNumber: String ->
-                        serviceViewModel.beignPhoneVerification(phoneNumber)
+                        viewModel.phoneVerification(phoneNumber)
                     }
                 )
             }
@@ -120,9 +125,11 @@ fun Service(
                 setOtpInputDialogVisibility = setOtpInputDialogVisibility,
                 setVerified = setVerified,
                 beginOtpVerification = { phoneNumber: String, otpCode: String ->
-                    serviceViewModel.beginOtpVerification(phoneNumber, otpCode)
+                    viewModel.otpVerification(phoneNumber, otpCode)
                 }
-            )
+            ) { phoneNumber: String, token: String ->
+                viewModel.saveToStorage(phoneNumber, token)
+            }
         }
 
         false -> {
