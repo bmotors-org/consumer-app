@@ -8,10 +8,6 @@ android {
     namespace 'bm.app'
     compileSdk 32
 
-    buildFeatures {
-        compose = true
-    }
-
     defaultConfig {
         applicationId "bm.app"
         minSdk 26
@@ -82,6 +78,10 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:1.2.11"
     // Ktor resources
     implementation "io.ktor:ktor-client-resources:$ktor_version"
+    // Ktor Auth
+    implementation "io.ktor:ktor-client-auth:$ktor_version"
+    // Jetpack Datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.3"
