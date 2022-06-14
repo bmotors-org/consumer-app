@@ -1,4 +1,4 @@
-package bm.app.screens.service
+package bm.app.screens.service.api
 
 import bm.app.data.constants.ApiEndPoints
 import bm.app.data.serde.OtpVerification
@@ -12,7 +12,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import java.net.ConnectException
 
-class ApiServices : ApiInterface {
+class Network : ApiInterface {
     override suspend fun verifyPhone(phoneNumber: String): HttpResponse {
         return try {
             KtorHttpClient.post {
@@ -47,5 +47,9 @@ class ApiServices : ApiInterface {
             println(cause.message)
             CustomHttpResponse(500, "Server Error")
         }
+    }
+
+    override suspend fun sendBearerToken(): HttpResponse {
+        TODO("Not yet implemented")
     }
 }
