@@ -15,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -25,17 +24,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import bm.app.components.OtpInputDialog
 import bm.app.components.PhoneVerifyButton
 import bm.app.components.VerifyConfirmChip
-import bm.app.data.preferencesDS.DataStoreKeys
-import bm.app.dataStore
-import kotlinx.coroutines.flow.map
 
 @Composable
 fun Service(
     categoryName: String,
     serviceViewModel: ServiceViewModel = viewModel()
 ) {
-    val context = LocalContext.current
-
     val (verified, setVerified) = rememberSaveable { mutableStateOf(false) }
     val (otpInputDialogVisibility, setOtpInputDialogVisibility) = remember {
         mutableStateOf(false)
@@ -43,19 +37,11 @@ fun Service(
     val (otpCode, setOtpCode) = remember { mutableStateOf("") }
     val (phoneNumber, setPhoneNumber) = remember { mutableStateOf("") }
 
+    @Suppress("NAME_SHADOWING")
     LaunchedEffect(true) {
-        val phoneNumberFlow = context.dataStore.data.map { preferences ->
-            preferences[DataStoreKeys.PHONE_NUMBER] ?: ""
-        }
-
-        try {
-            phoneNumberFlow.collect {
-                setPhoneNumber(it)
-                setVerified(it.isNotEmpty())
-            }
-        } catch (cause: Exception) {
-            println(cause.message)
-        }
+        val phoneNumber = serviceViewModel.getPhoneNumberFromStorage()
+        setPhoneNumber(phoneNumber)
+        setVerified(phoneNumber.isNotEmpty())
     }
 
     Column(
