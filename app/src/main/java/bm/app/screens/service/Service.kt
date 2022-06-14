@@ -31,9 +31,9 @@ import kotlinx.coroutines.flow.map
 
 @Composable
 fun Service(
-    categoryName: String
+    categoryName: String,
+    serviceViewModel: ServiceViewModel = viewModel()
 ) {
-    val viewModel: ServiceViewModel = viewModel()
     val context = LocalContext.current
 
     val (verified, setVerified) = rememberSaveable { mutableStateOf(false) }
@@ -50,7 +50,6 @@ fun Service(
 
         try {
             phoneNumberFlow.collect {
-                println("I am here!! $it")
                 setPhoneNumber(it)
                 setVerified(it.isNotEmpty())
             }
@@ -108,31 +107,26 @@ fun Service(
                     phoneNumber,
                     setOtpInputDialogVisibility,
                     beginPhoneVerification = { phoneNumber: String ->
-                        viewModel.phoneVerification(phoneNumber)
+                        serviceViewModel.phoneVerification(phoneNumber)
                     }
                 )
             }
         }
     }
 
-    when (otpInputDialogVisibility) {
-        true -> {
-            @Suppress("NAME_SHADOWING")
-            OtpInputDialog(
-                phoneNumber = phoneNumber,
-                otpCode = otpCode,
-                setOtpCode = setOtpCode,
-                setOtpInputDialogVisibility = setOtpInputDialogVisibility,
-                setVerified = setVerified,
-                beginOtpVerification = { phoneNumber: String, otpCode: String ->
-                    viewModel.otpVerification(phoneNumber, otpCode)
-                }
-            ) { phoneNumber: String, token: String ->
-                viewModel.saveToStorage(phoneNumber, token)
+    if (otpInputDialogVisibility) {
+        @Suppress("NAME_SHADOWING")
+        OtpInputDialog(
+            phoneNumber = phoneNumber,
+            otpCode = otpCode,
+            setOtpCode = setOtpCode,
+            setOtpInputDialogVisibility = setOtpInputDialogVisibility,
+            setVerified = setVerified,
+            beginOtpVerification = { phoneNumber: String, otpCode: String ->
+                serviceViewModel.otpVerification(phoneNumber, otpCode)
             }
-        }
-
-        false -> {
+        ) { phoneNumber: String, token: String ->
+            serviceViewModel.saveToStorage(phoneNumber, token)
         }
     }
 }
