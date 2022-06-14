@@ -23,4 +23,6 @@ class ServiceViewModel(application: Application) : AndroidViewModel(application)
         phoneNumber: String,
         token: String
     ) = storageApi.storePhoneNumberAndToken(phoneNumber, token)
+
+    suspend fun getPhoneNumberFromStorage() = storageApi.getPhoneNumber()
 }
