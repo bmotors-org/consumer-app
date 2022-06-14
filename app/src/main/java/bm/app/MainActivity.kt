@@ -17,7 +17,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import bm.app.navigation.App
 import bm.app.ui.theme.BMAppTheme
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_info")
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
