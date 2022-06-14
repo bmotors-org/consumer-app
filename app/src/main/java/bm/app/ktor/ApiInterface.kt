@@ -6,4 +6,6 @@ interface ApiInterface {
     suspend fun verifyPhone(phoneNumber: String): HttpResponse
 
     suspend fun verifyOtp(phoneNumber: String, otpCode: String): HttpResponse
+
+    suspend fun sendBearerToken(): HttpResponse
 }
