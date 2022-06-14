@@ -36,7 +36,10 @@ fun BottomBar(navHostController: NavHostController) {
                     )
                 },
                 selected = selectedSt == index,
-                onClick = { setSelectedSt(index) },
+                onClick = {
+                    setSelectedSt(index)
+                    navHostController.navigate(route = item.route)
+                },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primaryContainer,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
