@@ -1,16 +1,26 @@
 package bm.app.screens.service
 
-import androidx.lifecycle.ViewModel
-import io.ktor.client.statement.*
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import bm.app.screens.service.api.Network
+import bm.app.screens.service.api.Storage
 
-class ServiceViewModel() : ViewModel() {
-    private val apiServices = ApiServices()
+class ServiceViewModel(application: Application) : AndroidViewModel(application) {
+    private val networkApi = Network()
 
-    suspend fun beignPhoneVerification(phoneNumber: String): HttpResponse {
-        return apiServices.verifyPhone(phoneNumber)
-    }
+    private val storageApi = Storage(application)
 
-    suspend fun beginOtpVerification(phoneNumber: String, otpCode: String): HttpResponse {
-        return apiServices.verifyOtp(phoneNumber, otpCode)
-    }
+    suspend fun phoneVerification(
+        phoneNumber: String
+    ) = networkApi.verifyPhone(phoneNumber)
+
+    suspend fun otpVerification(
+        phoneNumber: String,
+        otpCode: String
+    ) = networkApi.verifyOtp(phoneNumber, otpCode)
+
+    suspend fun saveToStorage(
+        phoneNumber: String,
+        token: String
+    ) = storageApi.storePhoneNumberAndToken(phoneNumber, token)
 }
