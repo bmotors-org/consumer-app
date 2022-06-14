@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -15,10 +16,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import bm.app.R
+import bm.app.data.serde.JwtToken
+import io.ktor.client.call.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +38,8 @@ fun OtpInputDialog(
     setOtpCode: (String) -> Unit,
     setOtpInputDialogVisibility: (Boolean) -> Unit,
     setVerified: (Boolean) -> Unit,
-    beginOtpVerification: suspend (String, String) -> HttpResponse
+    beginOtpVerification: suspend (String, String) -> HttpResponse,
+    storePhoneNumberAndToken: suspend (String, String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -44,6 +52,8 @@ fun OtpInputDialog(
                         val response = beginOtpVerification(phoneNumber, otpCode)
 
                         if (response.status == HttpStatusCode.OK) {
+                            val body: JwtToken = response.body()
+                            storePhoneNumberAndToken(phoneNumber, body.token)
                             setVerified(true)
                             setOtpInputDialogVisibility(false)
                         }
@@ -79,19 +89,31 @@ fun OtpInputDialog(
         },
         title = {
             Text(
-                text = "Enter the otp sent to your phone number"
+                text = "Enter the otp sent to your phone number",
+                textAlign = TextAlign.Center
             )
         },
         text = {
             OutlinedTextField(
                 value = otpCode,
-                onValueChange = { setOtpCode(it) },
+                onValueChange = {
+                    if (it.length <= 4) {
+                        setOtpCode(it)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = TextStyle(
+                    fontSize = 18.sp,
+                    letterSpacing = 1.sp
+                ),
                 label = {
                     Text(
                         text = "OTP"
                     )
                 },
-                modifier = Modifier.fillMaxWidth()
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number
+                )
             )
         },
         shape = RoundedCornerShape(8.dp),
