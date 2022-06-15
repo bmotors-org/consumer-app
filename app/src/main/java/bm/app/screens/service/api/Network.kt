@@ -1,55 +1,59 @@
 package bm.app.screens.service.api
 
 import bm.app.data.constants.ApiEndPoints
+import bm.app.data.serde.JwtToken
 import bm.app.data.serde.OtpVerification
 import bm.app.data.serde.PhoneVerification
-import bm.app.ktor.ApiInterface
 import bm.app.ktor.KtorHttpClient
-import bm.app.ktor.utils.CustomHttpResponse
-import bm.app.ktor.utils.KtorResponseException
-import bm.app.ktor.utils.MissingPageException
+import io.ktor.client.call.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import java.net.ConnectException
 
-class Network : ApiInterface {
-    override suspend fun verifyPhone(phoneNumber: String): HttpResponse {
+data class PhoneVerificationResponse(val success: Boolean, val message: String)
+data class OtpVerificationResponse(
+    val success: Boolean,
+    val message: String,
+    val token: String
+)
+
+class Network {
+    suspend fun verifyPhone(phoneNumber: String): PhoneVerificationResponse {
         return try {
             KtorHttpClient.post {
                 url(urlString = ApiEndPoints.VERIFY_PHONE)
                 setBody(PhoneVerification(phoneNumber))
             }
-        } catch (cause: KtorResponseException) {
+            PhoneVerificationResponse(success = true, message = "Otp sent to your phone")
+        } catch (cause: Exception) {
             println(cause.message)
-            cause.response
-        } catch (cause: MissingPageException) {
-            println(cause.message)
-            cause.response
-        } catch (cause: ConnectException) {
-            println(cause.message)
-            CustomHttpResponse(500, "Server Error")
+            PhoneVerificationResponse(
+                success = false,
+                message = cause.message ?: "An Error Occured"
+            )
         }
     }
 
-    override suspend fun verifyOtp(phoneNumber: String, otpCode: String): HttpResponse {
+    suspend fun verifyOtp(
+        phoneNumber: String,
+        otpCode: String
+    ): OtpVerificationResponse {
         return try {
-            KtorHttpClient.post {
+            val response = KtorHttpClient.post {
                 url(urlString = ApiEndPoints.VERIFY_OTP)
                 setBody(OtpVerification(phoneNumber, otpCode))
             }
-        } catch (cause: KtorResponseException) {
+            val body = response.body<JwtToken>()
+            OtpVerificationResponse(
+                success = true,
+                message = "Otp verified successfully",
+                token = body.token
+            )
+        } catch (cause: Exception) {
             println(cause.message)
-            cause.response
-        } catch (cause: MissingPageException) {
-            println(cause.message)
-            cause.response
-        } catch (cause: ConnectException) {
-            println(cause.message)
-            CustomHttpResponse(500, "Server Error")
+            OtpVerificationResponse(
+                success = true,
+                message = cause.message ?: "An Error Occured",
+                token = ""
+            )
         }
-    }
-
-    override suspend fun sendBearerToken(): HttpResponse {
-        TODO("Not yet implemented")
     }
 }
