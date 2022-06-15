@@ -78,8 +78,6 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:1.2.11"
     // Ktor resources
     implementation "io.ktor:ktor-client-resources:$ktor_version"
-    // Ktor Auth
-    implementation "io.ktor:ktor-client-auth:$ktor_version"
     // Jetpack Datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
