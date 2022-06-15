@@ -57,9 +57,9 @@ fun OtpInputDialog(
                 onClick = {
                     setWaiting(true)
                     coroutineScope.launch(Dispatchers.Default) {
-                        val response = otpVerification(phoneNumber, otpCode)
-                        if (response.success) {
-                            saveToStorage(phoneNumber, response.token)
+                        val result = otpVerification(phoneNumber, otpCode)
+                        if (result.success) {
+                            saveToStorage(phoneNumber, result.token)
                             setVerified(true)
                             setOtpInputDialogVisibility(false)
                         } else {
