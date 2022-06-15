@@ -91,11 +91,10 @@ fun Service(
             false -> {
                 PhoneVerifyButton(
                     phoneNumber,
-                    setOtpInputDialogVisibility,
-                    beginPhoneVerification = { phoneNumber: String ->
-                        serviceViewModel.phoneVerification(phoneNumber)
-                    }
-                )
+                    setOtpInputDialogVisibility
+                ) { phoneNumber: String ->
+                    serviceViewModel.phoneVerification(phoneNumber)
+                }
             }
         }
     }
@@ -108,7 +107,7 @@ fun Service(
             setOtpCode = setOtpCode,
             setOtpInputDialogVisibility = setOtpInputDialogVisibility,
             setVerified = setVerified,
-            beginOtpVerification = { phoneNumber: String, otpCode: String ->
+            otpVerification = { phoneNumber: String, otpCode: String ->
                 serviceViewModel.otpVerification(phoneNumber, otpCode)
             }
         ) { phoneNumber: String, token: String ->
