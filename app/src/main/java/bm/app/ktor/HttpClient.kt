@@ -1,6 +1,5 @@
 package bm.app.ktor
 
-import bm.app.ktor.utils.MissingPageException
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -8,7 +7,6 @@ import io.ktor.client.plugins.cache.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.resources.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.*
@@ -39,20 +37,6 @@ val KtorHttpClient = HttpClient(CIO) {
                 ignoreUnknownKeys = true
             }
         )
-    }
-
-    HttpResponseValidator {
-        handleResponseExceptionWithRequest { exception, _ ->
-            if (exception !is ClientRequestException) return@handleResponseExceptionWithRequest
-            val exceptionResponse = exception.response
-            if (exceptionResponse.status == HttpStatusCode.NotFound) {
-                val exceptionResponseText = exceptionResponse.bodyAsText()
-                throw MissingPageException(
-                    exceptionResponse,
-                    exceptionResponseText
-                )
-            }
-        }
     }
 
     install(UserAgent) {
