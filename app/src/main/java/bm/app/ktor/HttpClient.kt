@@ -1,5 +1,6 @@
 package bm.app.ktor
 
+import bm.app.BuildConfig
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -18,7 +19,7 @@ val KtorHttpClient = HttpClient(CIO) {
     defaultRequest {
         url {
             protocol = URLProtocol.HTTP
-            host = "SERVER_BASE_URL"
+            host = BuildConfig.SERVER_IP
             port = 4000
             path("api/")
         }
