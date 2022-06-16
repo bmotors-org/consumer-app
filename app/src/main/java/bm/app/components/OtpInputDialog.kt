@@ -1,11 +1,17 @@
 package bm.app.components
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -15,11 +21,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -32,6 +40,23 @@ import bm.app.R
 import bm.app.screens.service.api.OtpVerificationResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+enum class WaitingState {
+    Idle,
+    Waiting,
+    Success,
+    Error
+}
+
+enum class SuccessAlphaAnim {
+    Start,
+    End
+}
+
+enum class ErrorAlphaAnim {
+    Start,
+    End
+}
 
 @Composable
 fun OtpInputDialog(
@@ -46,24 +71,66 @@ fun OtpInputDialog(
     val coroutineScope = rememberCoroutineScope()
 
     val (waiting, setWaiting) = rememberSaveable {
-        mutableStateOf(false)
+        mutableStateOf(WaitingState.Idle)
     }
+
+    val (successAlpha, setSuccessAlpha) = rememberSaveable {
+        mutableStateOf(SuccessAlphaAnim.Start)
+    }
+
+    val (errorAlpha, setErrorAlpha) = rememberSaveable {
+        mutableStateOf(ErrorAlphaAnim.Start)
+    }
+
+    val successAlphaAnim by animateFloatAsState(
+        targetValue = when (successAlpha) {
+            SuccessAlphaAnim.Start -> 0f
+            SuccessAlphaAnim.End -> 1f
+        },
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioHighBouncy,
+            stiffness = Spring.StiffnessVeryLow,
+            visibilityThreshold = 0.1f
+        ),
+        finishedListener = {
+            setOtpInputDialogVisibility(false)
+            setWaiting(WaitingState.Idle)
+        }
+    )
+
+    val errorAlphaAnim by animateFloatAsState(
+        targetValue = when (errorAlpha) {
+            ErrorAlphaAnim.Start -> 0f
+            ErrorAlphaAnim.End -> 1f
+        },
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioHighBouncy,
+            stiffness = Spring.StiffnessVeryLow,
+            visibilityThreshold = 0.1f
+        ),
+        finishedListener = {
+            setOtpInputDialogVisibility(false)
+            setWaiting(WaitingState.Idle)
+        }
+    )
 
     AlertDialog(
         onDismissRequest = { setOtpInputDialogVisibility(false) },
         confirmButton = {
             Button(
-                enabled = !waiting,
+                enabled = waiting == WaitingState.Idle,
                 onClick = {
-                    setWaiting(true)
+                    setWaiting(WaitingState.Waiting)
                     coroutineScope.launch(Dispatchers.Default) {
                         val result = otpVerification(phoneNumber, otpCode)
                         if (result.success) {
-                            saveToStorage(phoneNumber, result.token)
+                            // saveToStorage(phoneNumber, result.token)
                             setVerified(true)
-                            setOtpInputDialogVisibility(false)
+                            setWaiting(WaitingState.Success)
+                            setSuccessAlpha(SuccessAlphaAnim.End)
                         } else {
-                            setWaiting(false)
+                            setWaiting(WaitingState.Error)
+                            setErrorAlpha(ErrorAlphaAnim.End)
                         }
                     }
                 },
@@ -76,7 +143,7 @@ fun OtpInputDialog(
         },
         dismissButton = {
             TextButton(
-                enabled = !waiting,
+                enabled = waiting == WaitingState.Idle,
                 onClick = {
                     setOtpInputDialogVisibility(false)
                     setOtpCode("")
@@ -104,18 +171,7 @@ fun OtpInputDialog(
         },
         text = {
             when (waiting) {
-                true -> {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(60.dp)
-                        )
-                    }
-                }
-
-                false -> {
+                WaitingState.Idle -> {
                     OutlinedTextField(
                         value = otpCode,
                         onValueChange = {
@@ -136,6 +192,39 @@ fun OtpInputDialog(
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number
                         )
+                    )
+                }
+
+                WaitingState.Waiting -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(60.dp)
+                        )
+                    }
+                }
+
+                WaitingState.Success -> {
+                    Icon(
+                        imageVector = Icons.Filled.CheckCircle,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .alpha(successAlphaAnim)
+                            .fillMaxWidth()
+                            .size(200.dp)
+                    )
+                }
+
+                WaitingState.Error -> {
+                    Icon(
+                        imageVector = Icons.Filled.Warning,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .alpha(errorAlphaAnim)
+                            .fillMaxWidth()
+                            .size(200.dp)
                     )
                 }
             }
