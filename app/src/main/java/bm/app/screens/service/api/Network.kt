@@ -50,7 +50,7 @@ class Network {
         } catch (cause: Exception) {
             println(cause.message)
             OtpVerificationResponse(
-                success = true,
+                success = false,
                 message = cause.message ?: "An Error Occured",
                 token = ""
             )
