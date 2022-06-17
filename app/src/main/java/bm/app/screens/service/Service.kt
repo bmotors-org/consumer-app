@@ -104,6 +104,7 @@ fun Service(
         OtpInputDialog(
             phoneNumber = phoneNumber,
             otpCode = otpCode,
+            verified = verified,
             setOtpCode = setOtpCode,
             setOtpInputDialogVisibility = setOtpInputDialogVisibility,
             setVerified = setVerified,
