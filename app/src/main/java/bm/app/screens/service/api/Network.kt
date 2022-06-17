@@ -3,17 +3,12 @@ package bm.app.screens.service.api
 import bm.app.data.constants.ApiEndPoints
 import bm.app.data.serde.JwtToken
 import bm.app.data.serde.OtpVerification
+import bm.app.data.serde.OtpVerificationResponse
 import bm.app.data.serde.PhoneVerification
+import bm.app.data.serde.PhoneVerificationResponse
 import bm.app.ktor.KtorHttpClient
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-
-data class PhoneVerificationResponse(val success: Boolean, val message: String)
-data class OtpVerificationResponse(
-    val success: Boolean,
-    val message: String,
-    val token: String
-)
 
 class Network {
     suspend fun verifyPhone(phoneNumber: String): PhoneVerificationResponse {

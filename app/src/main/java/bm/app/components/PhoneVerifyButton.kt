@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import bm.app.screens.service.api.PhoneVerificationResponse
+import bm.app.data.serde.PhoneVerificationResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
