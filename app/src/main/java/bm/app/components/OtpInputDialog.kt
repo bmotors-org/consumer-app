@@ -130,20 +130,30 @@ fun OtpInputDialog(
             visibilityThreshold = 0.1f
         ),
         finishedListener = {
+            println("ErrorAlphaAnimation callback here")
             errorState.targetState = false
-            setWaiting(false)
         }
     )
+
+    if (!errorState.isIdle && errorState.currentState) {
+        setWaiting(false)
+        setErrorAlpha(ErrorAlphaAnim.Start)
+    }
 
     // If cicular progress bar is disappearing, trigger
     // the animation to show the success icon, or error icon
     // depending on the verification result
     if (!progressState.isIdle && progressState.currentState) {
         if (verified) {
+            // trigger the success icon visibility
             successState.targetState = true
+            // trigger the success alpha animation
             setSuccessAlpha(SuccessAlphaAnim.End)
         } else {
+            println("Hey, I am here, not verified!")
+            // trigger the error icon visibility
             errorState.targetState = true
+            // trigger the error alpha animation
             setErrorAlpha(ErrorAlphaAnim.End)
         }
     }
@@ -154,16 +164,15 @@ fun OtpInputDialog(
             Button(
                 enabled = !waiting,
                 onClick = {
-                    setWaiting(true)
-                    progressState.targetState = true
+                    setWaiting(true) // hides the textfield
+                    progressState.targetState = true // triggers progress animation
                     coroutineScope.launch(Dispatchers.Default) {
                         val result = otpVerification(phoneNumber, otpCode)
                         if (result.success) {
-                            println("Success Success Success")
                             // saveToStorage(phoneNumber, result.token)
                             setVerified(true)
                         }
-                        progressState.targetState = false
+                        progressState.targetState = false // stops progress animation
                     }
                 },
                 contentPadding = PaddingValues(16.dp, 10.dp)
