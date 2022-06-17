@@ -5,8 +5,10 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -69,10 +71,6 @@ fun OtpInputDialog(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
-    val (waiting, setWaiting) = rememberSaveable {
-        mutableStateOf(false)
-    }
-
     val (successAlpha, setSuccessAlpha) = rememberSaveable {
         mutableStateOf(SuccessAlphaAnim.Start)
     }
@@ -82,6 +80,12 @@ fun OtpInputDialog(
     }
 
     // Variables for the animation
+    val idleState = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
+        }
+    }
+
     val progressState = remember {
         MutableTransitionState(false).apply {
             targetState = false
@@ -115,7 +119,6 @@ fun OtpInputDialog(
             setOtpInputDialogVisibility(false)
             // Reset the animation
             successState.targetState = false
-            setWaiting(false)
         }
     )
 
@@ -137,10 +140,20 @@ fun OtpInputDialog(
         }
     )
 
+    // If textfield is disappearing
+    if (!idleState.isIdle && idleState.currentState) {
+        progressState.targetState = true // triggers progress animation
+    }
+
     // When the error icon is disappearing
     if (!errorState.isIdle && errorState.currentState) {
-        setWaiting(false) // show textfield
+        idleState.targetState = true // show textfield
         setErrorAlpha(ErrorAlphaAnim.Start) // reset alpha state
+    }
+
+    // When the success icon is disappearing
+    if (!successState.isIdle && successState.currentState) {
+        setSuccessAlpha(SuccessAlphaAnim.Start) // reset alpha state
     }
 
     // If cicular progress bar is disappearing, trigger
@@ -164,10 +177,9 @@ fun OtpInputDialog(
         onDismissRequest = { setOtpInputDialogVisibility(false) },
         confirmButton = {
             Button(
-                enabled = !waiting,
+                enabled = idleState.targetState,
                 onClick = {
-                    setWaiting(true) // hides the textfield
-                    progressState.targetState = true // triggers progress animation
+                    idleState.targetState = false // hides the textfield
                     coroutineScope.launch(Dispatchers.Default) {
                         val result = otpVerification(phoneNumber, otpCode)
                         if (result.success) {
@@ -187,7 +199,7 @@ fun OtpInputDialog(
 
         dismissButton = {
             TextButton(
-                enabled = !waiting,
+                enabled = idleState.targetState,
                 onClick = {
                     setOtpInputDialogVisibility(false)
                     setOtpCode("")
@@ -217,7 +229,11 @@ fun OtpInputDialog(
         },
 
         text = {
-            if (!waiting) {
+            AnimatedVisibility(
+                visibleState = idleState,
+                enter = expandHorizontally(),
+                exit = shrinkHorizontally()
+            ) {
                 OutlinedTextField(
                     value = otpCode,
                     onValueChange = {
