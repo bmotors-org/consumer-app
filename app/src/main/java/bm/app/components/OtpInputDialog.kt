@@ -130,14 +130,17 @@ fun OtpInputDialog(
             visibilityThreshold = 0.1f
         ),
         finishedListener = {
-            println("ErrorAlphaAnimation callback here")
-            errorState.targetState = false
+            // If error icon is visible, make it invisible
+            if (errorState.targetState) {
+                errorState.targetState = false
+            }
         }
     )
 
+    // When the error icon is disappearing
     if (!errorState.isIdle && errorState.currentState) {
-        setWaiting(false)
-        setErrorAlpha(ErrorAlphaAnim.Start)
+        setWaiting(false) // show textfield
+        setErrorAlpha(ErrorAlphaAnim.Start) // reset alpha state
     }
 
     // If cicular progress bar is disappearing, trigger
@@ -150,7 +153,6 @@ fun OtpInputDialog(
             // trigger the success alpha animation
             setSuccessAlpha(SuccessAlphaAnim.End)
         } else {
-            println("Hey, I am here, not verified!")
             // trigger the error icon visibility
             errorState.targetState = true
             // trigger the error alpha animation
