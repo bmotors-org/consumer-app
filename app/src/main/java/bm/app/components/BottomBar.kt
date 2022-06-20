@@ -37,8 +37,14 @@ fun BottomBar(navHostController: NavHostController) {
                 },
                 selected = selectedSt == index,
                 onClick = {
-                    setSelectedSt(index)
-                    navHostController.navigate(route = item.route)
+                    val prevRoute = navHostController
+                        .currentBackStackEntry
+                        ?.destination
+                        ?.route
+                    if (prevRoute != item.route) {
+                        setSelectedSt(index)
+                        navHostController.navigate(route = item.route)
+                    }
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primaryContainer,
