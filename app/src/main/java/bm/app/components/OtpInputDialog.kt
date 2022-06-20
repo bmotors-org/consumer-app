@@ -183,8 +183,8 @@ fun OtpInputDialog(
                     coroutineScope.launch(Dispatchers.Default) {
                         val result = otpVerification(phoneNumber, otpCode)
                         if (result.success) {
-                            // saveToStorage(phoneNumber, result.token)
                             setVerified(true)
+                            saveToStorage(phoneNumber, result.token)
                         }
                         progressState.targetState = false // stops progress animation
                     }
