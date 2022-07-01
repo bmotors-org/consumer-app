@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import bm.app.navigation.App
+import bm.app.base.App
 import bm.app.ui.theme.BMAppTheme
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_info")
