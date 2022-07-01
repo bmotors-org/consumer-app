@@ -21,13 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import bm.app.screens.profile.api.network.responses.MergeName
+import bm.app.screens.profile.api.network.data.MergeNameRes
 import kotlinx.coroutines.launch
 
 @Composable
 fun NameField(
     token: String,
-    mergeName: suspend (String, String) -> MergeName
+    mergeNameRes: suspend (String, String) -> MergeNameRes
 ) {
     val coroutineScope = rememberCoroutineScope()
 
