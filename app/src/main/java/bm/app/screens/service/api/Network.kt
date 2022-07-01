@@ -1,7 +1,7 @@
 package bm.app.screens.service.api
 
 import bm.app.data.constants.ApiEndPoints
-import bm.app.data.serde.JwtToken
+import bm.app.data.serde.Creds
 import bm.app.data.serde.OtpVerification
 import bm.app.data.serde.OtpVerificationResponse
 import bm.app.data.serde.PhoneVerification
@@ -36,18 +36,18 @@ class Network {
                 url(urlString = ApiEndPoints.VERIFY_OTP)
                 setBody(OtpVerification(phoneNumber, otpCode))
             }
-            val body = response.body<JwtToken>()
+            val body = response.body<Creds>()
             OtpVerificationResponse(
                 success = true,
                 message = "Otp verified successfully",
-                token = body.token
+                sessionID = body.sessionID
             )
         } catch (cause: Exception) {
             println(cause.message)
             OtpVerificationResponse(
                 success = false,
                 message = cause.message ?: "An Error Occured",
-                token = ""
+                sessionID = null
             )
         }
     }
