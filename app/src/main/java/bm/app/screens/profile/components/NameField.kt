@@ -15,14 +15,22 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import bm.app.screens.profile.api.network.responses.MergeName
+import kotlinx.coroutines.launch
 
 @Composable
-fun NameField() {
+fun NameField(
+    token: String,
+    mergeName: suspend (String, String) -> MergeName
+) {
+    val coroutineScope = rememberCoroutineScope()
+
     val (nameEditable, setNameEditable) = rememberSaveable {
         mutableStateOf(false)
     }
@@ -61,7 +69,7 @@ fun NameField() {
 
                     IconButton(
                         onClick = {
-                            // TODO: save name
+                            // TODO: reset
                             setNameEditable(false)
                         }
                     ) {
@@ -71,10 +79,11 @@ fun NameField() {
                         )
                     }
 
+                    // Click to save name
                     IconButton(
                         onClick = {
-                            // TODO: save name
-                            setNameEditable(false)
+                            coroutineScope.launch {
+                            }
                         }
                     ) {
                         Icon(
