@@ -93,7 +93,7 @@ fun Service(
                     phoneNumber,
                     setOtpInputDialogVisibility
                 ) { phoneNumber: String ->
-                    serviceViewModel.phoneVerification(phoneNumber)
+                    serviceViewModel.verifyPhone(phoneNumber)
                 }
             }
         }
@@ -108,11 +108,11 @@ fun Service(
             setOtpCode = setOtpCode,
             setOtpInputDialogVisibility = setOtpInputDialogVisibility,
             setVerified = setVerified,
-            otpVerification = { phoneNumber: String, otpCode: String ->
-                serviceViewModel.otpVerification(phoneNumber, otpCode)
+            verifyOtp = { phoneNumber: String, otpCode: String ->
+                serviceViewModel.verifyOtp(phoneNumber, otpCode)
             }
         ) { phoneNumber: String, token: String ->
-            serviceViewModel.saveToStorage(phoneNumber, token)
+            serviceViewModel.storeCreds(phoneNumber, token)
         }
     }
 }

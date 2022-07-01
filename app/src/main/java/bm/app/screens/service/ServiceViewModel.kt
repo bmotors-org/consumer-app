@@ -10,19 +10,19 @@ class ServiceViewModel(application: Application) : AndroidViewModel(application)
 
     private val storageApi = Storage(application)
 
-    suspend fun phoneVerification(
+    suspend fun verifyPhone(
         phoneNumber: String
     ) = networkApi.verifyPhone(phoneNumber)
 
-    suspend fun otpVerification(
+    suspend fun verifyOtp(
         phoneNumber: String,
         otpCode: String
     ) = networkApi.verifyOtp(phoneNumber, otpCode)
 
-    suspend fun saveToStorage(
+    suspend fun storeCreds(
         phoneNumber: String,
         token: String
-    ) = storageApi.storePhoneNumberAndToken(phoneNumber, token)
+    ) = storageApi.storeCreds(phoneNumber, token)
 
     suspend fun getPhoneNumberFromStorage() = storageApi.getPhoneNumber()
 }

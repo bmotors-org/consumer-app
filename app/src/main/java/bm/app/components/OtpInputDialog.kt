@@ -66,8 +66,8 @@ fun OtpInputDialog(
     setOtpCode: (String) -> Unit,
     setOtpInputDialogVisibility: (Boolean) -> Unit,
     setVerified: (Boolean) -> Unit,
-    otpVerification: suspend (String, String) -> OtpVerificationResponse,
-    saveToStorage: suspend (String, String) -> Unit
+    verifyOtp: suspend (String, String) -> OtpVerificationResponse,
+    storeCreds: suspend (String, String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -181,10 +181,10 @@ fun OtpInputDialog(
                 onClick = {
                     idleState.targetState = false // hides the textfield
                     coroutineScope.launch(Dispatchers.Default) {
-                        val result = otpVerification(phoneNumber, otpCode)
+                        val result = verifyOtp(phoneNumber, otpCode)
                         if (result.success) {
                             setVerified(true)
-                            saveToStorage(phoneNumber, result.token)
+                            storeCreds(phoneNumber, result.sessionID!!)
                         }
                         progressState.targetState = false // stops progress animation
                     }

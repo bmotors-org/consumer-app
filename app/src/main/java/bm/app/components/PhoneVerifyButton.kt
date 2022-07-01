@@ -16,20 +16,20 @@ import kotlinx.coroutines.launch
 fun PhoneVerifyButton(
     phoneNumber: String,
     setOtpInputDialogVisibility: (Boolean) -> Unit,
-    beginPhoneVerification: suspend (String) -> PhoneVerificationResponse
+    verifyPhone: suspend (String) -> PhoneVerificationResponse
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     Button(
         onClick = {
             coroutineScope.launch(Dispatchers.Default) {
-                val response = beginPhoneVerification(phoneNumber)
+                val response = verifyPhone(phoneNumber)
                 when (response.success) {
                     true -> {
                         // TODO: Implement later
                     }
                     false -> {
-                        // TODO: Implement later
+                        setOtpInputDialogVisibility(false)
                     }
                 }
             }
