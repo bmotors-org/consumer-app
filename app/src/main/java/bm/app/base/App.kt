@@ -1,13 +1,11 @@
-package bm.app.navigation
+package bm.app.base
 
-import android.annotation.SuppressLint
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
 import bm.app.components.BottomBar
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
@@ -18,6 +16,6 @@ fun App() {
             BottomBar(navHostController = navHostController)
         }
     ) {
-        NavLogic(navHostController = navHostController)
+        NavLogic(navHostController = navHostController, paddingVals = it)
     }
 }
