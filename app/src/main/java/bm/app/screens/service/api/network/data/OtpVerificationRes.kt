@@ -1,9 +1,9 @@
-package bm.app.data.serde
+package bm.app.screens.service.api.network.data
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OtpVerificationResponse(
+data class OtpVerificationRes(
     val success: Boolean,
     val message: String,
     val sessionID: String?
