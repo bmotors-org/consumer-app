@@ -3,6 +3,6 @@ package bm.app.data.preferencesDS
 import androidx.datastore.preferences.core.stringPreferencesKey
 
 object DataStoreKeys {
-    val TOKEN = stringPreferencesKey("token")
+    val SESSION_ID = stringPreferencesKey("sessionID")
     val PHONE_NUMBER = stringPreferencesKey("phoneNumber")
 }
