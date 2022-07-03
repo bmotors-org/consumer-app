@@ -1,14 +1,12 @@
 package bm.app.base.components
 
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import bm.app.data.utils.navItems
 
@@ -16,7 +14,9 @@ import bm.app.data.utils.navItems
 fun BottomBar(navHostController: NavHostController) {
     val (selectedSt, setSelectedSt) = remember { mutableStateOf(0) }
 
-    NavigationBar {
+    NavigationBar(
+        modifier = Modifier.height(64.dp)
+    ) {
         navItems.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {
@@ -29,12 +29,7 @@ fun BottomBar(navHostController: NavHostController) {
                         }
                     )
                 },
-                label = {
-                    Text(
-                        text = item.label,
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                },
+                label = null,
                 selected = selectedSt == index,
                 onClick = {
                     val prevRoute = navHostController
