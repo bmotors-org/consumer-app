@@ -45,8 +45,8 @@ val KtorHttpClient = HttpClient(CIO) {
     }
 
     install(HttpRequestRetry) {
-        retryOnServerErrors(maxRetries = 3)
-        retryOnException(maxRetries = 3)
+        retryOnServerErrors(maxRetries = 0)
+        retryOnException(maxRetries = 0)
         exponentialDelay()
     }
 
