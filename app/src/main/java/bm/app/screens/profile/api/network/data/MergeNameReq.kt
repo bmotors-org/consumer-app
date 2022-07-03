@@ -4,6 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class MergeNameReq(
-    val name: String,
-    val phoneNumber: String
+    val name: String
 )
