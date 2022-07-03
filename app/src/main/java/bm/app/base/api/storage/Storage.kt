@@ -1,6 +1,7 @@
-package bm.app.base.api
+package bm.app.base.api.storage
 
 import android.content.Context
+import bm.app.base.api.storage.data.UserData
 import bm.app.data.preferencesDS.DataStoreKeys
 import bm.app.dataStore
 import kotlinx.coroutines.flow.first
@@ -11,9 +12,11 @@ class Storage(
 ) {
     private val dataStore = context.dataStore
 
-    suspend fun readToken(): String {
+    suspend fun getUserData(): UserData {
         return dataStore.data.map {
-            it[DataStoreKeys.TOKEN] ?: ""
+            val sessionID = it[DataStoreKeys.TOKEN] ?: ""
+            val phoneNumber = it[DataStoreKeys.PHONE_NUMBER] ?: ""
+            UserData(sessionID, phoneNumber)
         }.first()
     }
 }
