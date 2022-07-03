@@ -14,7 +14,7 @@ class Storage(
 
     suspend fun getUserData(): UserData {
         return dataStore.data.map {
-            val sessionID = it[DataStoreKeys.TOKEN] ?: ""
+            val sessionID = it[DataStoreKeys.SESSION_ID] ?: ""
             val phoneNumber = it[DataStoreKeys.PHONE_NUMBER] ?: ""
             UserData(sessionID, phoneNumber)
         }.first()

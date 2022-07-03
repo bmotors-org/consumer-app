@@ -12,9 +12,9 @@ class Storage(
 ) {
     private val dataStore = context.dataStore
 
-    suspend fun storeCreds(phoneNumber: String, token: String) {
+    suspend fun storeCreds(phoneNumber: String, sessionID: String) {
         dataStore.edit {
-            it[DataStoreKeys.TOKEN] = token
+            it[DataStoreKeys.SESSION_ID] = sessionID
             it[DataStoreKeys.PHONE_NUMBER] = phoneNumber
         }
     }
