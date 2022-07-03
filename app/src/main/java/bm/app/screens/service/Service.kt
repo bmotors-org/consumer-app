@@ -111,8 +111,8 @@ fun Service(
             verifyOtp = { phoneNumber: String, otpCode: String ->
                 serviceViewModel.verifyOtp(phoneNumber, otpCode)
             }
-        ) { phoneNumber: String, token: String ->
-            serviceViewModel.storeCreds(phoneNumber, token)
+        ) { phoneNumber: String, sessionID: String ->
+            serviceViewModel.storeCreds(phoneNumber, sessionID)
         }
     }
 }

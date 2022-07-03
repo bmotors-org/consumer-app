@@ -21,8 +21,8 @@ class ServiceViewModel(application: Application) : AndroidViewModel(application)
 
     suspend fun storeCreds(
         phoneNumber: String,
-        token: String
-    ) = storageApi.storeCreds(phoneNumber, token)
+        sessionID: String
+    ) = storageApi.storeCreds(phoneNumber, sessionID)
 
     suspend fun getPhoneNumberFromStorage() = storageApi.getPhoneNumber()
 }
