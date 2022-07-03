@@ -1,4 +1,4 @@
-package bm.app.components
+package bm.app.base.components
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
