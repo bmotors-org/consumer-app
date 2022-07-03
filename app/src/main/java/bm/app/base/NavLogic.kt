@@ -12,7 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import bm.app.screens.Home
+import bm.app.screens.home.Home
 import bm.app.screens.profile.Profile
 import bm.app.screens.service.Service
 
@@ -22,14 +22,19 @@ fun NavLogic(
     paddingVals: PaddingValues,
     navLogicViewModel: NavLogicViewModel = viewModel(),
 ) {
-    val (token, setToken) = rememberSaveable {
+    val (sessionID, setSessionID) = rememberSaveable {
+        mutableStateOf("")
+    }
+
+    val (phoneNumber, setPhoneNumber) = rememberSaveable {
         mutableStateOf("")
     }
 
     @Suppress("NAME_SHADOWING")
     LaunchedEffect(true) {
-        val token = navLogicViewModel.readToken()
-        setToken(token)
+        val userData = navLogicViewModel.getUserData()
+        setSessionID(userData.sessionID)
+        setPhoneNumber(userData.phoneNumber)
     }
 
     NavHost(
@@ -56,7 +61,8 @@ fun NavLogic(
         }
         composable(route = "profile") {
             Profile(
-                token = token
+                sessionID = sessionID,
+                phoneNumber = phoneNumber
             )
         }
     }
