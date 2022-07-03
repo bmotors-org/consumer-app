@@ -1,9 +1,9 @@
-package bm.app.screens.service.api
+package bm.app.screens.service.api.network
 
 import bm.app.data.constants.ApiEndPoints
 import bm.app.data.serde.Creds
-import bm.app.data.serde.OtpVerification
-import bm.app.data.serde.OtpVerificationResponse
+import bm.app.screens.service.api.network.data.OtpVerification
+import bm.app.screens.service.api.network.data.OtpVerificationRes
 import bm.app.data.serde.PhoneVerification
 import bm.app.data.serde.PhoneVerificationResponse
 import bm.app.ktor.KtorHttpClient
@@ -30,21 +30,21 @@ class Network {
     suspend fun verifyOtp(
         phoneNumber: String,
         otpCode: String
-    ): OtpVerificationResponse {
+    ): OtpVerificationRes {
         return try {
             val response = KtorHttpClient.post {
                 url(urlString = ApiEndPoints.VERIFY_OTP)
                 setBody(OtpVerification(phoneNumber, otpCode))
             }
             val body = response.body<Creds>()
-            OtpVerificationResponse(
+            OtpVerificationRes(
                 success = true,
                 message = "Otp verified successfully",
                 sessionID = body.sessionID
             )
         } catch (cause: Exception) {
             println(cause.message)
-            OtpVerificationResponse(
+            OtpVerificationRes(
                 success = false,
                 message = cause.message ?: "An Error Occured",
                 sessionID = null
