@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
 class Profile {
 
     @Serializable
-    @Resource("name")
-    class Name
+    @Resource("merge-name")
+    class Name(val parent: Profile = Profile())
 }
