@@ -1,4 +1,4 @@
-package bm.app.components
+package bm.app.screens.service.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle

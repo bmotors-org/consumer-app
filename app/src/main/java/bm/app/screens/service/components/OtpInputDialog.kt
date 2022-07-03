@@ -1,4 +1,4 @@
-package bm.app.components
+package bm.app.screens.service.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import bm.app.R
-import bm.app.data.serde.OtpVerificationResponse
+import bm.app.screens.service.api.network.data.OtpVerificationRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -66,7 +66,7 @@ fun OtpInputDialog(
     setOtpCode: (String) -> Unit,
     setOtpInputDialogVisibility: (Boolean) -> Unit,
     setVerified: (Boolean) -> Unit,
-    verifyOtp: suspend (String, String) -> OtpVerificationResponse,
+    verifyOtp: suspend (String, String) -> OtpVerificationRes,
     storeCreds: suspend (String, String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()

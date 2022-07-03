@@ -1,4 +1,4 @@
-package bm.app.components
+package bm.app.screens.service.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
