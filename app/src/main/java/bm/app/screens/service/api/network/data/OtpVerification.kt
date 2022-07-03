@@ -1,4 +1,4 @@
-package bm.app.data.serde
+package bm.app.screens.service.api.network.data
 
 import io.ktor.resources.* // ktlint-disable no-wildcard-imports
 import kotlinx.serialization.Serializable

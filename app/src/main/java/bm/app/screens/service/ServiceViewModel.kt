@@ -2,8 +2,8 @@ package bm.app.screens.service
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import bm.app.screens.service.api.Network
-import bm.app.screens.service.api.Storage
+import bm.app.screens.service.api.network.Network
+import bm.app.screens.service.api.storage.Storage
 
 class ServiceViewModel(application: Application) : AndroidViewModel(application) {
     private val networkApi = Network()

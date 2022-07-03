@@ -1,4 +1,4 @@
-package bm.app.screens.service.api
+package bm.app.screens.service.api.storage
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit

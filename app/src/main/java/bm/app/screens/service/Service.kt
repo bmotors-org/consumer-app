@@ -21,9 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import bm.app.components.OtpInputDialog
-import bm.app.components.PhoneVerifyButton
-import bm.app.components.VerifyConfirmChip
+import bm.app.screens.service.components.OtpInputDialog
+import bm.app.screens.service.components.PhoneVerifyButton
+import bm.app.screens.service.components.VerifyConfirmChip
 
 @Composable
 fun Service(
