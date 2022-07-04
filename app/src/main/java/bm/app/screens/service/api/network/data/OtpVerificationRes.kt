@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class OtpVerificationRes(
     val success: Boolean,
     val message: String,
-    val sessionID: String?
+    val sessionID: String?,
+    val name: String?
 )
