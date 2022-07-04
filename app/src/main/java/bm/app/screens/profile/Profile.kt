@@ -9,16 +9,26 @@ import bm.app.screens.profile.components.Summary
 
 @Composable
 fun Profile(
-    profileViewModel: ProfileViewModel = viewModel(),
-    token: String
+    sessionID: String,
+    name: String,
+    setName: (String) -> Unit,
+    phoneNumber: String,
+    profileViewModel: ProfileViewModel = viewModel()
 ) {
     Column {
         Header()
-        Summary()
+        Summary(
+            phoneNumber = phoneNumber
+        )
         NameField(
-            token = token
-        ) { name, phoneNumber ->
-            profileViewModel.mergeName(name, phoneNumber)
+            sessionID = sessionID,
+            name = name,
+            setName = setName,
+            mergeName = { name, sessionID ->
+                profileViewModel.mergeName(name, sessionID)
+            }
+        ) { name ->
+            profileViewModel.storeName(name)
         }
     }
 }
