@@ -9,10 +9,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -28,24 +26,22 @@ import bm.app.screens.service.components.VerifyConfirmChip
 @Composable
 fun Service(
     categoryName: String,
+    setSessionID: (String) -> Unit,
+    verified: Boolean,
+    setVerified: (Boolean) -> Unit,
+    setName: (String) -> Unit,
+    phoneNumber: String,
+    setPhoneNumber: (String) -> Unit,
     serviceViewModel: ServiceViewModel = viewModel()
 ) {
-    val (verified, setVerified) = rememberSaveable { mutableStateOf(false) }
     val (otpInputDialogVisibility, setOtpInputDialogVisibility) = remember {
         mutableStateOf(false)
     }
-    val (otpCode, setOtpCode) = remember { mutableStateOf("") }
-    val (phoneNumber, setPhoneNumber) = remember { mutableStateOf("") }
-
-    @Suppress("NAME_SHADOWING")
-    LaunchedEffect(true) {
-        val phoneNumber = serviceViewModel.getPhoneNumberFromStorage()
-        setPhoneNumber(phoneNumber)
-        setVerified(phoneNumber.isNotEmpty())
-    }
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -81,7 +77,8 @@ fun Service(
             },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number
-            )
+            ),
+            maxLines = 1
         )
 
         when (verified) {
@@ -103,16 +100,16 @@ fun Service(
         @Suppress("NAME_SHADOWING")
         OtpInputDialog(
             phoneNumber = phoneNumber,
-            otpCode = otpCode,
+            setSessionID = setSessionID,
             verified = verified,
-            setOtpCode = setOtpCode,
-            setOtpInputDialogVisibility = setOtpInputDialogVisibility,
             setVerified = setVerified,
+            setName = setName,
+            setOtpInputDialogVisibility = setOtpInputDialogVisibility,
             verifyOtp = { phoneNumber: String, otpCode: String ->
                 serviceViewModel.verifyOtp(phoneNumber, otpCode)
             }
-        ) { phoneNumber: String, sessionID: String ->
-            serviceViewModel.storeCreds(phoneNumber, sessionID)
+        ) { phoneNumber: String, sessionID: String, name: String ->
+            serviceViewModel.storeCreds(phoneNumber, sessionID, name)
         }
     }
 }
