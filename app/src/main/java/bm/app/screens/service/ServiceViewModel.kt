@@ -26,8 +26,9 @@ class ServiceViewModel(
     suspend fun storeCreds(
         phoneNumber: String,
         sessionID: String,
-        name: String
+        name: String,
+        email: String
     ) = storageApi.storeCreds(
-        phoneNumber, sessionID, name
+        phoneNumber, sessionID, name, email
     )
 }

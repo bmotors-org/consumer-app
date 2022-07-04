@@ -32,6 +32,7 @@ fun Service(
     setName: (String) -> Unit,
     phoneNumber: String,
     setPhoneNumber: (String) -> Unit,
+    setEmail: (String) -> Unit,
     serviceViewModel: ServiceViewModel = viewModel()
 ) {
     val (otpInputDialogVisibility, setOtpInputDialogVisibility) = remember {
@@ -104,12 +105,16 @@ fun Service(
             verified = verified,
             setVerified = setVerified,
             setName = setName,
+            setEmail = setEmail,
             setOtpInputDialogVisibility = setOtpInputDialogVisibility,
             verifyOtp = { phoneNumber: String, otpCode: String ->
                 serviceViewModel.verifyOtp(phoneNumber, otpCode)
             }
-        ) { phoneNumber: String, sessionID: String, name: String ->
-            serviceViewModel.storeCreds(phoneNumber, sessionID, name)
+        ) { phoneNumber: String, sessionID: String,
+            name: String, email: String ->
+            serviceViewModel.storeCreds(
+                phoneNumber, sessionID, name, email
+            )
         }
     }
 }
