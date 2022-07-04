@@ -45,7 +45,6 @@ fun NameField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = 24.dp,
                 vertical = 16.dp
             )
     ) {
