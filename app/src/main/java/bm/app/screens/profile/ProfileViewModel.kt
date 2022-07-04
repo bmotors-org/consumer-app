@@ -14,10 +14,21 @@ class ProfileViewModel(
 
     suspend fun mergeName(
         name: String,
-        phoneNumber: String
-    ) = networkApi.mergeName(name, phoneNumber)
+        sessionID: String
+    ) = networkApi.mergeName(name, sessionID)
+
+    suspend fun mergeEmail(
+        email: String,
+        sessionID: String
+    ) = networkApi.mergeEmail(email, sessionID)
 
     suspend fun storeName(
         name: String
     ) = storageApi.storeName(name)
+
+    suspend fun storeEmail(
+        email: String
+    ) = storageApi.storeEmail(email)
+
+    suspend fun cleanCreds() = storageApi.cleanCreds()
 }
