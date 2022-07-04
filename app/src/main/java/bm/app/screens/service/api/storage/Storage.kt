@@ -13,12 +13,14 @@ class Storage(
     suspend fun storeCreds(
         phoneNumber: String,
         sessionID: String,
-        name: String
+        name: String,
+        email: String
     ) {
         dataStore.edit {
             it[DataStoreKeys.SESSION_ID] = sessionID
             it[DataStoreKeys.PHONE_NUMBER] = phoneNumber
             it[DataStoreKeys.NAME] = name
+            it[DataStoreKeys.EMAIL] = email
         }
     }
 }

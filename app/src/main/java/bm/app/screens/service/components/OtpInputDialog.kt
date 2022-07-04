@@ -65,9 +65,10 @@ fun OtpInputDialog(
     verified: Boolean,
     setVerified: (Boolean) -> Unit,
     setName: (String) -> Unit,
+    setEmail: (String) -> Unit,
     setOtpInputDialogVisibility: (Boolean) -> Unit,
     verifyOtp: suspend (String, String) -> OtpVerificationRes,
-    storeCreds: suspend (String, String, String) -> Unit,
+    storeCreds: suspend (String, String, String, String) -> Unit,
 ) {
     val (otpCode, setOtpCode) = remember { mutableStateOf("") }
 
@@ -188,10 +189,12 @@ fun OtpInputDialog(
                             setVerified(true)
                             setSessionID(result.sessionID!!)
                             setName(result.name!!)
+                            setEmail(result.email!!)
                             storeCreds(
                                 phoneNumber,
                                 result.sessionID,
-                                result.name
+                                result.name,
+                                result.email
                             )
                         }
                         progressState.targetState = false // stops progress animation
