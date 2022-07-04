@@ -16,7 +16,8 @@ class Storage(
         return dataStore.data.map {
             val sessionID = it[DataStoreKeys.SESSION_ID] ?: ""
             val phoneNumber = it[DataStoreKeys.PHONE_NUMBER] ?: ""
-            UserData(sessionID, phoneNumber)
+            val name = it[DataStoreKeys.NAME] ?: ""
+            UserData(sessionID, phoneNumber, name)
         }.first()
     }
 }
