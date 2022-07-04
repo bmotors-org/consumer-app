@@ -5,7 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import bm.app.screens.service.api.network.Network
 import bm.app.screens.service.api.storage.Storage
 
-class ServiceViewModel(application: Application) : AndroidViewModel(application) {
+class ServiceViewModel(
+    application: Application
+) : AndroidViewModel(application) {
     private val networkApi = Network()
 
     private val storageApi = Storage(application)
@@ -17,12 +19,15 @@ class ServiceViewModel(application: Application) : AndroidViewModel(application)
     suspend fun verifyOtp(
         phoneNumber: String,
         otpCode: String
-    ) = networkApi.verifyOtp(phoneNumber, otpCode)
+    ) = networkApi.verifyOtp(
+        phoneNumber, otpCode
+    )
 
     suspend fun storeCreds(
         phoneNumber: String,
-        sessionID: String
-    ) = storageApi.storeCreds(phoneNumber, sessionID)
-
-    suspend fun getPhoneNumberFromStorage() = storageApi.getPhoneNumber()
+        sessionID: String,
+        name: String
+    ) = storageApi.storeCreds(
+        phoneNumber, sessionID, name
+    )
 }
