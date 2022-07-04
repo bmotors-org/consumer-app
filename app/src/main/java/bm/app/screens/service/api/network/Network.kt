@@ -41,7 +41,8 @@ class Network {
                 success = true,
                 message = "Otp verified successfully",
                 sessionID = body.sessionID,
-                name = body.name
+                name = body.name,
+                email = body.email
             )
         } catch (cause: Exception) {
             println(cause.message)
@@ -49,7 +50,8 @@ class Network {
                 success = false,
                 message = cause.message ?: "An Error Occured",
                 sessionID = null,
-                name = null
+                name = null,
+                email = null
             )
         }
     }
