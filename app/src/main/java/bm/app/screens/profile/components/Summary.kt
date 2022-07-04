@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Summary() {
+fun Summary(phoneNumber: String) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -35,7 +35,7 @@ fun Summary() {
             modifier = Modifier.size(60.dp)
         )
         Text(
-            text = "12345",
+            text = phoneNumber,
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
