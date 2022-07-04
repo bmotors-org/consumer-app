@@ -1,6 +1,7 @@
 package bm.app.base.components
 
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +27,8 @@ fun BottomBar(navHostController: NavHostController) {
                         tint = when (index) {
                             selectedSt -> MaterialTheme.colorScheme.primaryContainer
                             else -> MaterialTheme.colorScheme.onPrimaryContainer
-                        }
+                        },
+                        modifier = Modifier.size(36.dp)
                     )
                 },
                 label = null,
