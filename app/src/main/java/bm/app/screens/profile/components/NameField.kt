@@ -26,17 +26,17 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NameField(
-    token: String,
-    mergeNameRes: suspend (String, String) -> MergeNameRes
+    sessionID: String,
+    name: String,
+    setName: (String) -> Unit,
+    mergeName: suspend (String, String) -> MergeNameRes,
+    storeName: suspend (String) -> Unit,
 ) {
+    println("SessionID in NameField: $sessionID")
     val coroutineScope = rememberCoroutineScope()
 
     val (nameEditable, setNameEditable) = rememberSaveable {
         mutableStateOf(false)
-    }
-
-    val (name, setName) = rememberSaveable {
-        mutableStateOf("")
     }
 
     Row(
@@ -83,6 +83,14 @@ fun NameField(
                     IconButton(
                         onClick = {
                             coroutineScope.launch {
+                                println("sessionID in 85: $sessionID")
+                                val response = mergeName(name, sessionID)
+                                if (response.success) {
+                                    storeName(name)
+                                } else {
+                                    setName("")
+                                }
+                                setNameEditable(false)
                             }
                         }
                     ) {
@@ -111,7 +119,7 @@ fun NameField(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "John Doe",
+                            text = name,
                             style = MaterialTheme.typography.titleLarge
                         )
 
