@@ -26,15 +26,25 @@ fun NavLogic(
         mutableStateOf("")
     }
 
+    val (verified, setVerified) = rememberSaveable {
+        mutableStateOf(false)
+    }
+
     val (phoneNumber, setPhoneNumber) = rememberSaveable {
         mutableStateOf("")
     }
 
-    @Suppress("NAME_SHADOWING")
+    val (name, setName) = rememberSaveable {
+        mutableStateOf("")
+    }
+
     LaunchedEffect(true) {
         val userData = navLogicViewModel.getUserData()
+        println(userData)
         setSessionID(userData.sessionID)
         setPhoneNumber(userData.phoneNumber)
+        setName(userData.name)
+        setVerified(userData.phoneNumber.isNotEmpty())
     }
 
     NavHost(
@@ -56,13 +66,21 @@ fun NavLogic(
             )
         ) {
             Service(
-                categoryName = it.arguments?.getString("categoryName") ?: ""
+                categoryName = it.arguments?.getString("categoryName") ?: "",
+                setSessionID = setSessionID,
+                verified = verified,
+                setVerified = setVerified,
+                setName = setName,
+                phoneNumber = phoneNumber,
+                setPhoneNumber = setPhoneNumber,
             )
         }
         composable(route = "profile") {
             Profile(
                 sessionID = sessionID,
-                phoneNumber = phoneNumber
+                name = name,
+                setName = setName,
+                phoneNumber = phoneNumber,
             )
         }
     }
