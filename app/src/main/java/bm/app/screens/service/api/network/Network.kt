@@ -1,7 +1,7 @@
 package bm.app.screens.service.api.network
 
 import bm.app.data.constants.ApiEndPoints
-import bm.app.data.serde.Creds
+import bm.app.screens.service.api.network.data.Creds
 import bm.app.screens.service.api.network.data.OtpVerification
 import bm.app.screens.service.api.network.data.OtpVerificationRes
 import bm.app.data.serde.PhoneVerification
@@ -40,14 +40,16 @@ class Network {
             OtpVerificationRes(
                 success = true,
                 message = "Otp verified successfully",
-                sessionID = body.sessionID
+                sessionID = body.sessionID,
+                name = body.name
             )
         } catch (cause: Exception) {
             println(cause.message)
             OtpVerificationRes(
                 success = false,
                 message = cause.message ?: "An Error Occured",
-                sessionID = null
+                sessionID = null,
+                name = null
             )
         }
     }
