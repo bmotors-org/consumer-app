@@ -10,4 +10,8 @@ class Profile {
     @Serializable
     @Resource("merge-name")
     class Name(val parent: Profile = Profile())
+
+    @Serializable
+    @Resource("merge-email")
+    class Email(val parent: Profile = Profile())
 }
