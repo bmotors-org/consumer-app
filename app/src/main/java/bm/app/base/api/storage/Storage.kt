@@ -17,7 +17,10 @@ class Storage(
             val sessionID = it[DataStoreKeys.SESSION_ID] ?: ""
             val phoneNumber = it[DataStoreKeys.PHONE_NUMBER] ?: ""
             val name = it[DataStoreKeys.NAME] ?: ""
-            UserData(sessionID, phoneNumber, name)
+            val email = it[DataStoreKeys.EMAIL] ?: ""
+            UserData(
+                sessionID, phoneNumber, name, email
+            )
         }.first()
     }
 }
