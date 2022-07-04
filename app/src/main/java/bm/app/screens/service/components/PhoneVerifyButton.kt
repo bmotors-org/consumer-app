@@ -22,18 +22,19 @@ fun PhoneVerifyButton(
 
     Button(
         onClick = {
+            // Testing code
+            if (phoneNumber.isEmpty()) {
+                setOtpInputDialogVisibility(true)
+                return@Button
+            }
+            //
+            setOtpInputDialogVisibility(true)
             coroutineScope.launch(Dispatchers.Default) {
                 val response = verifyPhone(phoneNumber)
-                when (response.success) {
-                    true -> {
-                        // TODO: Implement later
-                    }
-                    false -> {
-                        setOtpInputDialogVisibility(false)
-                    }
+                if (!response.success) {
+                    setOtpInputDialogVisibility(false)
                 }
             }
-            setOtpInputDialogVisibility(true)
         },
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(16.dp)
