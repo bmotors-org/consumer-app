@@ -61,14 +61,16 @@ enum class ErrorAlphaAnim {
 @Composable
 fun OtpInputDialog(
     phoneNumber: String,
-    otpCode: String,
+    setSessionID: (String) -> Unit,
     verified: Boolean,
-    setOtpCode: (String) -> Unit,
-    setOtpInputDialogVisibility: (Boolean) -> Unit,
     setVerified: (Boolean) -> Unit,
+    setName: (String) -> Unit,
+    setOtpInputDialogVisibility: (Boolean) -> Unit,
     verifyOtp: suspend (String, String) -> OtpVerificationRes,
-    storeCreds: suspend (String, String) -> Unit
+    storeCreds: suspend (String, String, String) -> Unit,
 ) {
+    val (otpCode, setOtpCode) = remember { mutableStateOf("") }
+
     val coroutineScope = rememberCoroutineScope()
 
     val (successAlpha, setSuccessAlpha) = rememberSaveable {
@@ -184,7 +186,13 @@ fun OtpInputDialog(
                         val result = verifyOtp(phoneNumber, otpCode)
                         if (result.success) {
                             setVerified(true)
-                            storeCreds(phoneNumber, result.sessionID!!)
+                            setSessionID(result.sessionID!!)
+                            setName(result.name!!)
+                            storeCreds(
+                                phoneNumber,
+                                result.sessionID,
+                                result.name
+                            )
                         }
                         progressState.targetState = false // stops progress animation
                     }
@@ -253,7 +261,8 @@ fun OtpInputDialog(
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number
-                    )
+                    ),
+                    maxLines = 1
                 )
             }
 
