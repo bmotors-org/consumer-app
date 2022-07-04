@@ -38,12 +38,17 @@ fun NavLogic(
         mutableStateOf("")
     }
 
+    val (email, setEmail) = rememberSaveable {
+        mutableStateOf("")
+    }
+
     LaunchedEffect(true) {
         val userData = navLogicViewModel.getUserData()
         println(userData)
         setSessionID(userData.sessionID)
         setPhoneNumber(userData.phoneNumber)
         setName(userData.name)
+        setEmail(userData.email)
         setVerified(userData.phoneNumber.isNotEmpty())
     }
 
@@ -73,6 +78,7 @@ fun NavLogic(
                 setName = setName,
                 phoneNumber = phoneNumber,
                 setPhoneNumber = setPhoneNumber,
+                setEmail = setEmail
             )
         }
         composable(route = "profile") {
@@ -81,6 +87,8 @@ fun NavLogic(
                 name = name,
                 setName = setName,
                 phoneNumber = phoneNumber,
+                email = email,
+                setEmail = setEmail,
             )
         }
     }
