@@ -14,6 +14,7 @@ import bm.app.screens.profile.components.*
 @Composable
 fun Profile(
     sessionID: MutableState<String>,
+    verified: MutableState<Boolean>,
     name: MutableState<String>,
     phoneNumber: MutableState<String>,
     email: MutableState<String>,
@@ -50,8 +51,10 @@ fun Profile(
 
         Spacer(modifier = Modifier.size(24.dp))
 
-        LogoutButton(
-            cleanCreds = { profileViewModel.cleanCreds() }
-        )
+        if (verified.value) {
+            LogoutButton(
+                cleanCreds = { profileViewModel.cleanCreds() }
+            )
+        }
     }
 }

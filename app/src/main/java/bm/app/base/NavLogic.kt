@@ -50,9 +50,9 @@ fun NavLogic(
                     defaultValue = ""
                 }
             )
-        ) { navBackStackEntry ->
+        ) {
             Service(
-                categoryName = navBackStackEntry.arguments?.getString("categoryName") ?: "",
+                categoryName = it.arguments?.getString("categoryName") ?: "",
                 sessionID = states.sessionID,
                 verified = states.verified,
                 name = states.name,
@@ -65,6 +65,7 @@ fun NavLogic(
         ) {
             Profile(
                 sessionID = states.sessionID,
+                verified = states.verified,
                 name = states.name,
                 phoneNumber = states.phoneNumber,
                 email = states.email,
