@@ -259,8 +259,7 @@ fun OtpInputDialog(
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number
-                    ),
-                    maxLines = 1
+                    )
                 )
             }
 
