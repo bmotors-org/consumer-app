@@ -6,10 +6,12 @@
         <entry key="app/src/main/java/bm/app/MainActivity.kt" value="1.6" />
         <entry key="app/src/main/java/bm/app/previews/Preview.kt" value="0.5453703703703704" />
         <entry key="app/src/main/res/drawable-200dpi/categoryplaceholder.xml" value="0.159" />
+        <entry key="app/src/main/res/drawable-anydpi/categoryplaceholder.xml" value="0.304" />
         <entry key="app/src/main/res/drawable-anydpi/logo.xml" value="0.3" />
         <entry key="app/src/main/res/drawable-en/logout.xml" value="0.19" />
         <entry key="app/src/main/res/drawable-nodpi/categoryplaceholder.xml" value="0.2245" />
         <entry key="app/src/main/res/drawable-nodpi/logo.xml" value="0.2245" />
+        <entry key="app/src/main/res/drawable/logout.xml" value="0.304" />
       </map>
     </option>
   </component>

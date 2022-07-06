@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,9 +23,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun EmailField(
-    sessionID: String,
-    email: String,
-    setEmail: (String) -> Unit,
+    sessionID: MutableState<String>,
+    email: MutableState<String>,
     mergeEmail: suspend (String, String) -> MergeEmailRes,
     storeEmail: suspend (String) -> Unit,
 ) {
@@ -57,8 +57,8 @@ fun EmailField(
                                 textAlign = TextAlign.Center
                             )
                         },
-                        value = email,
-                        onValueChange = { setEmail(it) },
+                        value = email.value,
+                        onValueChange = { email.value = it },
                         modifier = Modifier.weight(1f)
                     )
 
@@ -79,11 +79,13 @@ fun EmailField(
                         onClick = {
                             coroutineScope.launch {
                                 println("sessionID in 85: $sessionID")
-                                val response = mergeEmail(email, sessionID)
+                                val response = mergeEmail(
+                                    email.value, sessionID.value
+                                )
                                 if (response.success) {
-                                    storeEmail(email)
+                                    storeEmail(email.value)
                                 } else {
-                                    setEmail("")
+                                    email.value = ""
                                 }
                                 setEmailEditable(false)
                             }
@@ -114,7 +116,7 @@ fun EmailField(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = email,
+                            text = email.value,
                             style = MaterialTheme.typography.titleLarge
                         )
 

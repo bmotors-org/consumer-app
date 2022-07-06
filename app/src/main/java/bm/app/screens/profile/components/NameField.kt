@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -26,9 +27,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NameField(
-    sessionID: String,
-    name: String,
-    setName: (String) -> Unit,
+    sessionID: MutableState<String>,
+    name: MutableState<String>,
     mergeName: suspend (String, String) -> MergeNameRes,
     storeName: suspend (String) -> Unit,
 ) {
@@ -61,8 +61,8 @@ fun NameField(
                                 textAlign = TextAlign.Center
                             )
                         },
-                        value = name,
-                        onValueChange = { setName(it) },
+                        value = name.value,
+                        onValueChange = { name.value = it },
                         modifier = Modifier.weight(1f)
                     )
 
@@ -83,11 +83,13 @@ fun NameField(
                         onClick = {
                             coroutineScope.launch {
                                 println("sessionID in 85: $sessionID")
-                                val response = mergeName(name, sessionID)
+                                val response = mergeName(
+                                    name.value, sessionID.value
+                                )
                                 if (response.success) {
-                                    storeName(name)
+                                    storeName(name.value)
                                 } else {
-                                    setName("")
+                                    name.value = ""
                                 }
                                 setNameEditable(false)
                             }
@@ -118,7 +120,7 @@ fun NameField(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = name,
+                            text = name.value,
                             style = MaterialTheme.typography.titleLarge
                         )
 

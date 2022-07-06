@@ -26,11 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,12 +56,11 @@ enum class ErrorAlphaAnim {
 
 @Composable
 fun OtpInputDialog(
-    phoneNumber: String,
-    setSessionID: (String) -> Unit,
-    verified: Boolean,
-    setVerified: (Boolean) -> Unit,
-    setName: (String) -> Unit,
-    setEmail: (String) -> Unit,
+    phoneNumber: MutableState<String>,
+    sessionID: MutableState<String>,
+    verified: MutableState<Boolean>,
+    name: MutableState<String>,
+    email: MutableState<String>,
     setOtpInputDialogVisibility: (Boolean) -> Unit,
     verifyOtp: suspend (String, String) -> OtpVerificationRes,
     storeCreds: suspend (String, String, String, String) -> Unit,
@@ -163,7 +158,7 @@ fun OtpInputDialog(
     // the animation to show the success icon, or error icon
     // depending on the verification result
     if (!progressState.isIdle && progressState.currentState) {
-        if (verified) {
+        if (verified.value) {
             // trigger the success icon visibility
             successState.targetState = true
             // trigger the success alpha animation
@@ -184,14 +179,14 @@ fun OtpInputDialog(
                 onClick = {
                     idleState.targetState = false // hides the textfield
                     coroutineScope.launch(Dispatchers.Default) {
-                        val result = verifyOtp(phoneNumber, otpCode)
+                        val result = verifyOtp(phoneNumber.value, otpCode)
                         if (result.success) {
-                            setVerified(true)
-                            setSessionID(result.sessionID!!)
-                            setName(result.name!!)
-                            setEmail(result.email!!)
+                            verified.value = true
+                            sessionID.value = result.sessionID!!
+                            name.value = result.name!!
+                            email.value = result.email!!
                             storeCreds(
-                                phoneNumber,
+                                phoneNumber.value,
                                 result.sessionID,
                                 result.name,
                                 result.email

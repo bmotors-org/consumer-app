@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -12,12 +13,10 @@ import bm.app.screens.profile.components.*
 
 @Composable
 fun Profile(
-    sessionID: String,
-    name: String,
-    setName: (String) -> Unit,
-    phoneNumber: String,
-    email: String,
-    setEmail: (String) -> Unit,
+    sessionID: MutableState<String>,
+    name: MutableState<String>,
+    phoneNumber: MutableState<String>,
+    email: MutableState<String>,
     profileViewModel: ProfileViewModel = viewModel()
 ) {
     Column(
@@ -32,26 +31,22 @@ fun Profile(
         NameField(
             sessionID = sessionID,
             name = name,
-            setName = setName,
             mergeName = { name, sessionID ->
                 profileViewModel.mergeName(name, sessionID)
-            },
-            storeName = { name ->
-                profileViewModel.storeName(name)
             }
-        )
+        ) { name ->
+            profileViewModel.storeName(name)
+        }
 
         EmailField(
             sessionID = sessionID,
             email = email,
-            setEmail = setEmail,
             mergeEmail = { email, sessionID ->
                 profileViewModel.mergeEmail(email, sessionID)
-            },
-            storeEmail = { email ->
-                profileViewModel.storeEmail(email)
             }
-        )
+        ) { email ->
+            profileViewModel.storeEmail(email)
+        }
 
         Spacer(modifier = Modifier.size(24.dp))
 

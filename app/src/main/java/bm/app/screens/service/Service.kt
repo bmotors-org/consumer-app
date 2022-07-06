@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,13 +27,11 @@ import bm.app.screens.service.components.VerifyConfirmChip
 @Composable
 fun Service(
     categoryName: String,
-    setSessionID: (String) -> Unit,
-    verified: Boolean,
-    setVerified: (Boolean) -> Unit,
-    setName: (String) -> Unit,
-    phoneNumber: String,
-    setPhoneNumber: (String) -> Unit,
-    setEmail: (String) -> Unit,
+    sessionID: MutableState<String>,
+    verified: MutableState<Boolean>,
+    name: MutableState<String>,
+    phoneNumber: MutableState<String>,
+    email: MutableState<String>,
     serviceViewModel: ServiceViewModel = viewModel()
 ) {
     val (otpInputDialogVisibility, setOtpInputDialogVisibility) = remember {
@@ -52,14 +51,14 @@ fun Service(
             textAlign = TextAlign.Center
         )
         OutlinedTextField(
-            value = phoneNumber,
+            value = phoneNumber.value,
             onValueChange = {
                 if (it.length <= 10) {
-                    setPhoneNumber(it)
+                    phoneNumber.value = it
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            readOnly = verified,
+            readOnly = verified.value,
             textStyle = TextStyle(
                 fontSize = 18.sp,
                 letterSpacing = 1.sp
@@ -82,13 +81,13 @@ fun Service(
             maxLines = 1
         )
 
-        when (verified) {
+        when (verified.value) {
             true -> {
                 VerifyConfirmChip()
             }
             false -> {
                 PhoneVerifyButton(
-                    phoneNumber,
+                    phoneNumber.value,
                     setOtpInputDialogVisibility
                 ) { phoneNumber: String ->
                     serviceViewModel.verifyPhone(phoneNumber)
@@ -101,11 +100,10 @@ fun Service(
         @Suppress("NAME_SHADOWING")
         OtpInputDialog(
             phoneNumber = phoneNumber,
-            setSessionID = setSessionID,
+            sessionID = sessionID,
             verified = verified,
-            setVerified = setVerified,
-            setName = setName,
-            setEmail = setEmail,
+            name = name,
+            email = email,
             setOtpInputDialogVisibility = setOtpInputDialogVisibility,
             verifyOtp = { phoneNumber: String, otpCode: String ->
                 serviceViewModel.verifyOtp(phoneNumber, otpCode)

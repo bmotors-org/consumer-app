@@ -11,13 +11,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Summary(phoneNumber: String) {
+fun Summary(phoneNumber: MutableState<String>) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -34,7 +35,7 @@ fun Summary(phoneNumber: String) {
             modifier = Modifier.size(60.dp)
         )
         Text(
-            text = phoneNumber,
+            text = phoneNumber.value,
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
