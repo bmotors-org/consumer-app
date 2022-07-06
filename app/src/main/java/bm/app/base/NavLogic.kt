@@ -23,14 +23,16 @@ fun NavLogic(
 ) {
     val states = UiState().rememberNavLogicState()
 
+    val (verified, sessionID, phoneNumber, name, email) = states
+
     LaunchedEffect(true) {
         val userData = navLogicViewModel.getUserData()
         println(userData)
-        states.sessionID.value = userData.sessionID
-        states.phoneNumber.value = userData.phoneNumber
-        states.name.value = userData.name
-        states.email.value = userData.email
-        states.verified.value = userData.phoneNumber.isNotEmpty()
+        sessionID.value = userData.sessionID
+        phoneNumber.value = userData.phoneNumber
+        name.value = userData.name
+        email.value = userData.email
+        verified.value = userData.phoneNumber.isNotEmpty()
     }
 
     NavHost(
@@ -53,22 +55,14 @@ fun NavLogic(
         ) {
             Service(
                 categoryName = it.arguments?.getString("categoryName") ?: "",
-                sessionID = states.sessionID,
-                verified = states.verified,
-                name = states.name,
-                phoneNumber = states.phoneNumber,
-                email = states.email
+                sessionID, verified, name, phoneNumber, email
             )
         }
         composable(
             route = "profile"
         ) {
             Profile(
-                sessionID = states.sessionID,
-                verified = states.verified,
-                name = states.name,
-                phoneNumber = states.phoneNumber,
-                email = states.email,
+                sessionID, verified, name, phoneNumber, email
             )
         }
     }

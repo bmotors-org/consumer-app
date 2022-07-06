@@ -77,8 +77,7 @@ fun Service(
             },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number
-            ),
-            maxLines = 1
+            )
         )
 
         when (verified.value) {
@@ -87,7 +86,7 @@ fun Service(
             }
             false -> {
                 PhoneVerifyButton(
-                    phoneNumber.value,
+                    phoneNumber,
                     setOtpInputDialogVisibility
                 ) { phoneNumber: String ->
                     serviceViewModel.verifyPhone(phoneNumber)
@@ -99,11 +98,7 @@ fun Service(
     if (otpInputDialogVisibility) {
         @Suppress("NAME_SHADOWING")
         OtpInputDialog(
-            phoneNumber = phoneNumber,
-            sessionID = sessionID,
-            verified = verified,
-            name = name,
-            email = email,
+            phoneNumber, sessionID, verified, name, email,
             setOtpInputDialogVisibility = setOtpInputDialogVisibility,
             verifyOtp = { phoneNumber: String, otpCode: String ->
                 serviceViewModel.verifyOtp(phoneNumber, otpCode)

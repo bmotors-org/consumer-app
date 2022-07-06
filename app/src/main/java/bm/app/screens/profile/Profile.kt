@@ -26,12 +26,9 @@ fun Profile(
         Spacer(modifier = Modifier.size(24.dp))
         Header()
         Spacer(modifier = Modifier.size(16.dp))
-        Summary(
-            phoneNumber = phoneNumber
-        )
+        Summary(phoneNumber)
         NameField(
-            sessionID = sessionID,
-            name = name,
+            sessionID, name,
             mergeName = { name, sessionID ->
                 profileViewModel.mergeName(name, sessionID)
             }
@@ -40,8 +37,7 @@ fun Profile(
         }
 
         EmailField(
-            sessionID = sessionID,
-            email = email,
+            sessionID, email,
             mergeEmail = { email, sessionID ->
                 profileViewModel.mergeEmail(email, sessionID)
             }

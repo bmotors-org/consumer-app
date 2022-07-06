@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/java/bm/app/MainActivity.kt" value="1.6" />
+        <entry key="app/src/main/java/bm/app/previews/AnimateAlpha.kt" value="1.6" />
         <entry key="app/src/main/java/bm/app/previews/Preview.kt" value="0.5453703703703704" />
         <entry key="app/src/main/res/drawable-200dpi/categoryplaceholder.xml" value="0.159" />
         <entry key="app/src/main/res/drawable-anydpi/categoryplaceholder.xml" value="0.304" />
