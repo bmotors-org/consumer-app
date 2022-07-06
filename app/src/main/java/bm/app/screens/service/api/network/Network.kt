@@ -1,7 +1,7 @@
 package bm.app.screens.service.api.network
 
-import bm.app.data.serde.PhoneVerification
-import bm.app.data.serde.PhoneVerificationResponse
+import bm.app.screens.service.api.network.data.PhoneVerifyCreds
+import bm.app.screens.service.api.network.data.PhoneVerifyRes
 import bm.app.ktor.KtorHttpClient
 import bm.app.screens.service.api.network.data.Creds
 import bm.app.screens.service.api.network.data.OtpVerification
@@ -12,18 +12,18 @@ import io.ktor.client.plugins.resources.*
 import io.ktor.client.request.*
 
 class Network {
-    suspend fun verifyPhone(phoneNumber: String): PhoneVerificationResponse {
+    suspend fun verifyPhone(phoneNumber: String): PhoneVerifyRes {
         return try {
             KtorHttpClient.post(resource = Auth.VerifyPhoneNumber()) {
-                setBody(PhoneVerification(phoneNumber))
+                setBody(PhoneVerifyCreds(phoneNumber))
             }
-            PhoneVerificationResponse(
+            PhoneVerifyRes(
                 success = true,
                 message = "Otp sent to your phone"
             )
         } catch (cause: Exception) {
             println(cause.message)
-            PhoneVerificationResponse(
+            PhoneVerifyRes(
                 success = false,
                 message = cause.message ?: "An Error Occured"
             )

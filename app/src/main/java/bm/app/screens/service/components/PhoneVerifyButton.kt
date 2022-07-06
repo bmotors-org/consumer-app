@@ -9,7 +9,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import bm.app.data.serde.PhoneVerificationResponse
+import bm.app.screens.service.api.network.data.PhoneVerifyRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 fun PhoneVerifyButton(
     phoneNumber: MutableState<String>,
     setOtpInputDialogVisibility: (Boolean) -> Unit,
-    verifyPhone: suspend (String) -> PhoneVerificationResponse
+    verifyPhone: suspend (String) -> PhoneVerifyRes
 ) {
     val coroutineScope = rememberCoroutineScope()
 
