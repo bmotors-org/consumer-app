@@ -4,14 +4,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import bm.app.base.api.UiState
 import bm.app.screens.home.Home
 import bm.app.screens.profile.Profile
 import bm.app.screens.service.Service
@@ -22,34 +21,16 @@ fun NavLogic(
     paddingVals: PaddingValues,
     navLogicViewModel: NavLogicViewModel = viewModel(),
 ) {
-    val (sessionID, setSessionID) = rememberSaveable {
-        mutableStateOf("")
-    }
-
-    val (verified, setVerified) = rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    val (phoneNumber, setPhoneNumber) = rememberSaveable {
-        mutableStateOf("")
-    }
-
-    val (name, setName) = rememberSaveable {
-        mutableStateOf("")
-    }
-
-    val (email, setEmail) = rememberSaveable {
-        mutableStateOf("")
-    }
+    val states = UiState().rememberNavLogicState()
 
     LaunchedEffect(true) {
         val userData = navLogicViewModel.getUserData()
         println(userData)
-        setSessionID(userData.sessionID)
-        setPhoneNumber(userData.phoneNumber)
-        setName(userData.name)
-        setEmail(userData.email)
-        setVerified(userData.phoneNumber.isNotEmpty())
+        states.sessionID = userData.sessionID
+        states.phoneNumber = userData.phoneNumber
+        states.name = userData.name
+        states.email = userData.email
+        states.verified = userData.phoneNumber.isNotEmpty()
     }
 
     NavHost(
@@ -69,26 +50,26 @@ fun NavLogic(
                     defaultValue = ""
                 }
             )
-        ) {
+        ) { navBackStackEntry ->
             Service(
-                categoryName = it.arguments?.getString("categoryName") ?: "",
-                setSessionID = setSessionID,
-                verified = verified,
-                setVerified = setVerified,
-                setName = setName,
-                phoneNumber = phoneNumber,
-                setPhoneNumber = setPhoneNumber,
-                setEmail = setEmail
+                categoryName = navBackStackEntry.arguments?.getString("categoryName") ?: "",
+                setSessionID = { states.sessionID = it },
+                verified = states.verified,
+                setVerified = { states.verified = it },
+                setName = { states.name = it },
+                phoneNumber = states.phoneNumber,
+                setPhoneNumber = { states.phoneNumber = it },
+                setEmail = { states.email = it }
             )
         }
         composable(route = "profile") {
             Profile(
-                sessionID = sessionID,
-                name = name,
-                setName = setName,
-                phoneNumber = phoneNumber,
-                email = email,
-                setEmail = setEmail,
+                sessionID = states.sessionID,
+                name = states.name,
+                setName = { states.name = it },
+                phoneNumber = states.phoneNumber,
+                email = states.email,
+                setEmail = { states.email = it },
             )
         }
     }
