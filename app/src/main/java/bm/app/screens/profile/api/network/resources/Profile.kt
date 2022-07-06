@@ -4,14 +4,13 @@ import io.ktor.resources.*
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Resource("/profile")
+@Resource(path = "/profile")
 class Profile {
-
     @Serializable
-    @Resource("merge-name")
+    @Resource(path = "merge-name")
     class Name(val parent: Profile = Profile())
 
     @Serializable
-    @Resource("merge-email")
+    @Resource(path = "merge-email")
     class Email(val parent: Profile = Profile())
 }
