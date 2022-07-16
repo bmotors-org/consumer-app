@@ -1,4 +1,4 @@
-package bm.app.screens.service.api.network.resources
+package bm.app.screens.service.api.resources
 
 import io.ktor.resources.*
 import kotlinx.serialization.Serializable

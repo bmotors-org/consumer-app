@@ -19,8 +19,8 @@ val KtorHttpClient = HttpClient(CIO) {
     defaultRequest {
         url {
             protocol = URLProtocol.HTTP
-            host = BuildConfig.SERVER_IP
-            port = 4000
+            host = BuildConfig.HOST
+            port = (BuildConfig.PORT).toInt()
             path("api/")
         }
         headers.appendIfNameAbsent(

@@ -9,7 +9,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import bm.app.screens.service.api.network.data.PhoneVerifyRes
+import bm.app.screens.service.api.data.PhoneVerifyRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

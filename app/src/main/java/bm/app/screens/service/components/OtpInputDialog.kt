@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import bm.app.R
-import bm.app.screens.service.api.network.data.OtpVerificationRes
+import bm.app.screens.service.api.data.OtpVerificationRes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

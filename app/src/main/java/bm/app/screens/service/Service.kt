@@ -8,10 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -22,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import bm.app.screens.service.components.OtpInputDialog
 import bm.app.screens.service.components.PhoneVerifyButton
+import bm.app.screens.service.components.PlaceSelection
 import bm.app.screens.service.components.VerifyConfirmChip
 
 @Composable
@@ -86,28 +84,31 @@ fun Service(
             }
             false -> {
                 PhoneVerifyButton(
-                    phoneNumber,
-                    setOtpInputDialogVisibility
+                    phoneNumber, setOtpInputDialogVisibility
                 ) { phoneNumber: String ->
                     serviceViewModel.verifyPhone(phoneNumber)
                 }
             }
         }
-    }
 
-    if (otpInputDialogVisibility) {
-        @Suppress("NAME_SHADOWING")
-        OtpInputDialog(
-            phoneNumber, sessionID, verified, name, email,
-            setOtpInputDialogVisibility = setOtpInputDialogVisibility,
-            verifyOtp = { phoneNumber: String, otpCode: String ->
-                serviceViewModel.verifyOtp(phoneNumber, otpCode)
+        PlaceSelection(
+            queryFlow = serviceViewModel.query,
+            predictions = serviceViewModel.predictions
+        ) { text: String ->
+            serviceViewModel.updateText(text)
+        }
+
+        if (otpInputDialogVisibility) {
+            @Suppress("NAME_SHADOWING") OtpInputDialog(
+                phoneNumber, sessionID, verified, name, email,
+                setOtpInputDialogVisibility = setOtpInputDialogVisibility,
+                verifyOtp = { phoneNumber: String, otpCode: String ->
+                    serviceViewModel.verifyOtp(phoneNumber, otpCode)
+                }) { phoneNumber: String, sessionID: String, name: String, email: String ->
+                serviceViewModel.storeCreds(
+                    phoneNumber, sessionID, name, email
+                )
             }
-        ) { phoneNumber: String, sessionID: String,
-            name: String, email: String ->
-            serviceViewModel.storeCreds(
-                phoneNumber, sessionID, name, email
-            )
         }
     }
 }

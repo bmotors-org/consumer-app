@@ -80,6 +80,8 @@ dependencies {
     implementation "io.ktor:ktor-client-resources:$ktor_version"
     // Jetpack Datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    // Google Places
+    implementation 'com.google.android.libraries.places:places:2.6.0'
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.3"
