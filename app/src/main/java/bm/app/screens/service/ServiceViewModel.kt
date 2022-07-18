@@ -65,6 +65,7 @@ class ServiceViewModel(
         .setOrigin(LatLng(-33.8749937, 151.2041382))
         .setCountry("BD")
         .setTypeFilter(TypeFilter.ADDRESS)
+        .setTypeFilter(TypeFilter.ESTABLISHMENT)
 
     suspend fun storeCreds(
         phoneNumber: String, sessionID: String,
