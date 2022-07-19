@@ -47,7 +47,7 @@ class ServiceViewModel(
 
     init {
         viewModelScope.launch {
-            _query.debounce(1500).collect {
+            _query.debounce(500).collect {
                 fetchPlaces(it)
             }
         }

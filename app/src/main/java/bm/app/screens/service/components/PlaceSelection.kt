@@ -1,14 +1,13 @@
 package bm.app.screens.service.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.google.android.libraries.places.api.model.AutocompletePrediction
@@ -24,8 +23,21 @@ fun PlaceSelection(
 
     var expanded by remember { mutableStateOf(!predictions.isNullOrEmpty()) }
 
+    val interactionSource = remember { MutableInteractionSource() }
+
+    val focusManager = LocalFocusManager.current
+
     LaunchedEffect(key1 = predictions) {
         expanded = !predictions.isNullOrEmpty()
+    }
+
+    if (interactionSource.collectIsFocusedAsState().value) {
+        PlaceDialog(
+            query = query,
+            updateText = updateText,
+            predictions = predictions,
+            focusManager = focusManager,
+        )
     }
 
     Box(
@@ -39,39 +51,20 @@ fun PlaceSelection(
         OutlinedTextField(
             value = query,
             onValueChange = { updateText(it) },
+            interactionSource = interactionSource,
             modifier = Modifier.fillMaxWidth()
         )
 
-        if (expanded) {
+        /*if (expanded) {
             Box(
-                modifier = Modifier.offset(x = 0.dp, y = 32.dp).zIndex(2f)
+                modifier = Modifier
+                    .offset(x = 0.dp, y = 64.dp)
+                    .zIndex(2f)
+                    .background(color = MaterialTheme.colorScheme.primaryContainer)
             ) {
-                Column(
-                    modifier = Modifier
-                        .background(color = MaterialTheme.colorScheme.primaryContainer)
-                        .offset(x = 0.dp, y = 32.dp)
-                ) {
-                    predictions?.forEach {
-                        val primaryText = it?.getPrimaryText(null).toString()
-                        val secondaryText = it?.getSecondaryText(null).toString()
 
-                        Text(
-                            text = primaryText,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier
-                                .clickable {
-                                    updateText(primaryText)
-                                    expanded = false
-                                }
-                                .fillMaxWidth()
-                                .padding(
-                                    horizontal = 14.dp, vertical = 8.dp
-                                )
-                        )
-                    }
-                }
             }
-        }
+        }*/
 
         OutlinedTextField(
             value = "",
