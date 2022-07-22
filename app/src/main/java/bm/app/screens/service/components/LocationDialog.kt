@@ -15,15 +15,18 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
 import com.google.android.libraries.places.api.model.AutocompletePrediction
+import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun UnloadLocationDialog(
-    unloadLocation: String,
-    updateUnloadLocation: (String) -> Unit,
+fun LocationDialog(
+    updateLocationQuery: (String) -> Unit,
+    locationFlow: StateFlow<String>,
+    updateLocation: (String) -> Unit,
     predictions: List<AutocompletePrediction?>?,
     focusManager: FocusManager
 ) {
+    val location by locationFlow.collectAsState()
     var expanded by remember { mutableStateOf(!predictions.isNullOrEmpty()) }
 
     LaunchedEffect(key1 = predictions) {
@@ -51,14 +54,18 @@ fun UnloadLocationDialog(
                     .wrapContentHeight(align = Alignment.Top)
             ) {
                 OutlinedTextField(
-                    label = { Text(text = "Unload Location") },
-                    value = unloadLocation,
-                    onValueChange = { updateUnloadLocation(it) },
+                    label = { Text(text = "Search Location") },
+                    value = location,
+                    onValueChange = { updateLocation(it) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Button(
-                    onClick = { focusManager.clearFocus() },
+                    onClick = {
+                        updateLocationQuery(location)
+                        updateLocation("")
+                        focusManager.clearFocus()
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(16.dp)
                 ) {
@@ -96,9 +103,11 @@ fun UnloadLocationDialog(
                                 verticalArrangement = Arrangement.spacedBy(
                                     space = 8.dp, alignment = Alignment.CenterVertically
                                 ),
-                                modifier = Modifier.clickable {
-                                    updateUnloadLocation(fullText)
-                                }//.padding(horizontal = 8.dp, vertical = 16.dp)
+                                modifier = Modifier
+                                    .clickable {
+                                        updateLocation(fullText)
+                                    }
+                                    .padding(vertical = 4.dp)
                             ) {
                                 Text(
                                     text = primaryText,
@@ -113,12 +122,14 @@ fun UnloadLocationDialog(
                                     color = MaterialTheme.colorScheme.surface,
                                     modifier = Modifier.fillMaxWidth()
                                 )
-
-                                Divider(
-                                    startIndent = 16.dp,
-                                    thickness = 1.dp
-                                )
                             }
+
+                            Spacer(modifier = Modifier.size(4.dp))
+
+                            Divider(
+                                startIndent = 16.dp,
+                                thickness = 1.dp
+                            )
                         }
                     }
                 }

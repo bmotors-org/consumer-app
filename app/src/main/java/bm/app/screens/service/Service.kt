@@ -92,15 +92,11 @@ fun Service(
         }
 
         PlaceSelection(
-            loadLocationFlow = serviceViewModel.loadLocation,
-            unLoadLocationFlow = serviceViewModel.unloadLocation,
+            locationFlow = serviceViewModel.location,
             predictions = serviceViewModel.predictions,
-            clearPredictions = { serviceViewModel.clearPredictions() },
-            updateLoadLocation = { text: String ->
-                serviceViewModel.updateLoadLocation(text)
-            }
+            clearPredictions = { serviceViewModel.clearPredictions() }
         ) { text: String ->
-            serviceViewModel.updateUnloadLocation(text)
+            serviceViewModel.updateLocation(text)
         }
 
         if (otpInputDialogVisibility) {

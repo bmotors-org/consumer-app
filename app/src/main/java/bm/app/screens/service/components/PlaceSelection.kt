@@ -19,15 +19,13 @@ enum class LocationPhase {
 
 @Composable
 fun PlaceSelection(
-    loadLocationFlow: StateFlow<String>,
-    unLoadLocationFlow: StateFlow<String>,
+    locationFlow: StateFlow<String>,
     predictions: List<AutocompletePrediction?>?,
     clearPredictions: () -> Unit,
-    updateLoadLocation: (String) -> Unit,
-    updateUnloadLocation: (String) -> Unit
+    updateLocation: (String) -> Unit
 ) {
-    val loadLocation by loadLocationFlow.collectAsState()
-    val unloadLocation by unLoadLocationFlow.collectAsState()
+    var loadLocation by remember { mutableStateOf("") }
+    var unloadLocation by remember { mutableStateOf("") }
 
     var dialogPhase by remember {
         mutableStateOf<LocationPhase?>(null)
@@ -35,26 +33,14 @@ fun PlaceSelection(
 
     val focusManager = LocalFocusManager.current
 
-    when (dialogPhase) {
-        LocationPhase.LoadLocation -> {
-            LoadLocationDialog(
-                loadLocation, updateLoadLocation,
-                predictions, focusManager,
-            )
-        }
-        LocationPhase.UnloadLocation -> {
-            UnloadLocationDialog(
-                unloadLocation, updateUnloadLocation,
-                predictions, focusManager,
-            )
-        }
-        null -> {}
-    }
-
-    if (dialogPhase == LocationPhase.LoadLocation) {
-        LoadLocationDialog(
-            loadLocation, updateLoadLocation,
-            predictions, focusManager,
+    if (dialogPhase != null) {
+        LocationDialog(
+            updateLocationQuery = if (dialogPhase == LocationPhase.LoadLocation) {
+                { loadLocation = it }
+            } else {
+                { unloadLocation = it }
+            },
+            locationFlow, updateLocation, predictions, focusManager
         )
     }
 
@@ -63,7 +49,7 @@ fun PlaceSelection(
     ) {
         OutlinedTextField(
             value = loadLocation,
-            onValueChange = { updateLoadLocation(it) },
+            onValueChange = {},
             label = { Text(text = "Load Location") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -79,7 +65,7 @@ fun PlaceSelection(
 
         OutlinedTextField(
             value = unloadLocation,
-            onValueChange = { updateUnloadLocation(it) },
+            onValueChange = {},
             label = { Text(text = "Unload Location") },
             modifier = Modifier
                 .fillMaxWidth()
