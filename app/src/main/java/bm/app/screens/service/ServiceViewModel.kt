@@ -36,8 +36,11 @@ import kotlinx.coroutines.launch
 class ServiceViewModel(
     application: Application
 ) : AndroidViewModel(application) {
-    private val _query = MutableStateFlow("")
-    val query = _query.asStateFlow()
+    private val _loadLocation = MutableStateFlow("")
+    private val _unloadLocation = MutableStateFlow("")
+
+    val loadLocation = _loadLocation.asStateFlow()
+    val unloadLocation = _unloadLocation.asStateFlow()
 
     var predictions by mutableStateOf<List<AutocompletePrediction?>?>(null)
 
@@ -47,7 +50,13 @@ class ServiceViewModel(
 
     init {
         viewModelScope.launch {
-            _query.debounce(500).collect {
+            _loadLocation.debounce(500).collect {
+                fetchPlaces(it)
+            }
+        }
+
+        viewModelScope.launch {
+            _unloadLocation.debounce(500).collect {
                 fetchPlaces(it)
             }
         }
@@ -129,8 +138,16 @@ class ServiceViewModel(
         }
     }
 
-    fun updateText(text: String) {
-        _query.value = text
+    fun updateLoadLocation(text: String) {
+        _loadLocation.value = text
+    }
+
+    fun updateUnloadLocation(text: String) {
+        _unloadLocation.value = text
+    }
+
+    fun clearPredictions() {
+        predictions = null
     }
 
     private fun fetchPlaces(text: String) {

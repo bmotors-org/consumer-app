@@ -1,82 +1,96 @@
 package bm.app.screens.service.components
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import kotlinx.coroutines.flow.StateFlow
 
+enum class LocationPhase {
+    LoadLocation, UnloadLocation
+}
+
 @Composable
 fun PlaceSelection(
-    queryFlow: StateFlow<String>,
+    loadLocationFlow: StateFlow<String>,
+    unLoadLocationFlow: StateFlow<String>,
     predictions: List<AutocompletePrediction?>?,
-    updateText: (String) -> Unit
+    clearPredictions: () -> Unit,
+    updateLoadLocation: (String) -> Unit,
+    updateUnloadLocation: (String) -> Unit
 ) {
-    val query by queryFlow.collectAsState()
+    val loadLocation by loadLocationFlow.collectAsState()
+    val unloadLocation by unLoadLocationFlow.collectAsState()
 
-    var expanded by remember { mutableStateOf(!predictions.isNullOrEmpty()) }
-
-    val interactionSource = remember { MutableInteractionSource() }
+    var dialogPhase by remember {
+        mutableStateOf<LocationPhase?>(null)
+    }
 
     val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(key1 = predictions) {
-        expanded = !predictions.isNullOrEmpty()
+    when (dialogPhase) {
+        LocationPhase.LoadLocation -> {
+            LoadLocationDialog(
+                loadLocation, updateLoadLocation,
+                predictions, focusManager,
+            )
+        }
+        LocationPhase.UnloadLocation -> {
+            UnloadLocationDialog(
+                unloadLocation, updateUnloadLocation,
+                predictions, focusManager,
+            )
+        }
+        null -> {}
     }
 
-    if (interactionSource.collectIsFocusedAsState().value) {
-        PlaceDialog(
-            query = query,
-            updateText = updateText,
-            predictions = predictions,
-            focusManager = focusManager,
+    if (dialogPhase == LocationPhase.LoadLocation) {
+        LoadLocationDialog(
+            loadLocation, updateLoadLocation,
+            predictions, focusManager,
         )
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .border(
-                width = 4.dp,
-                color = MaterialTheme.colorScheme.tertiary
-            )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         OutlinedTextField(
-            value = query,
-            onValueChange = { updateText(it) },
-            interactionSource = interactionSource,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        /*if (expanded) {
-            Box(
-                modifier = Modifier
-                    .offset(x = 0.dp, y = 64.dp)
-                    .zIndex(2f)
-                    .background(color = MaterialTheme.colorScheme.primaryContainer)
-            ) {
-
-            }
-        }*/
-
-        OutlinedTextField(
-            value = "",
-            onValueChange = { },
+            value = loadLocation,
+            onValueChange = { updateLoadLocation(it) },
+            label = { Text(text = "Load Location") },
             modifier = Modifier
                 .fillMaxWidth()
-                .offset(0.dp, 72.dp)
-                .zIndex(1f)
+                .onFocusChanged {
+                    dialogPhase = if (it.isFocused) {
+                        LocationPhase.LoadLocation
+                    } else {
+                        clearPredictions()
+                        null
+                    }
+                }
         )
-    }
 
-    predictions?.forEach {
-        println(it?.getPrimaryText(null).toString())
+        OutlinedTextField(
+            value = unloadLocation,
+            onValueChange = { updateUnloadLocation(it) },
+            label = { Text(text = "Unload Location") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged {
+                    dialogPhase = if (it.isFocused) {
+                        LocationPhase.UnloadLocation
+                    } else {
+                        clearPredictions()
+                        null
+                    }
+                }
+        )
     }
 }
